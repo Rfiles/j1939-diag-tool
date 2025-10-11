@@ -14,6 +14,7 @@
 // Struct to hold all application configuration
 struct AppConfig {
     uint8_t j1939_node_address;
+    uint64_t j1939_name;
     struct {
         String ssid;
         String password;

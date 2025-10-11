@@ -1,68 +1,138 @@
 /**
- * J1939 Diagnostic Tool - J1939 Handler Task Implementation
+ * J1939 Diagnostic Tool - J1939 Handler Task with Address Claiming
  * 
- * Versão: 2.1.0
+ * Versão: 3.1.0
  */
 
 #include "j1939_handler.h"
 #include "../core/config.h"
+#include "../core/error_handler.h"
+#include "tp_handler.h"
+
+// --- PGNs ---
+#define PGN_ADDRESS_CLAIMED 0xEE00 // 60928
+#define PGN_REQUEST         0xEA00 // 59904
 
 // --- RTOS Queues ---
 QueueHandle_t j1939_tx_queue;
 QueueHandle_t j1939_rx_queue;
 
-// --- Private Task Function ---
+// --- Module State ---
+static J1939_ADDRESS_CLAIM_STATE ac_state = AC_STATE_UNCLAIMED;
+static uint8_t current_source_address = 254; // Start with NULL address
+static unsigned long claim_start_time = 0;
+
+// --- Private Functions ---
+
+void send_address_claim() {
+    can_frame frame;
+    frame.can_id = (6UL << 26) | (PGN_ADDRESS_CLAIMED << 8) | 0xFF0000 | current_source_address;
+    frame.can_dlc = 8;
+    // Copy 64-bit NAME into data field (little-endian)
+    memcpy(frame.data, &config.j1939_name, 8);
+    mcp2515_transmit(&frame);
+    char msg[50];
+    sprintf(msg, "Sent Address Claim for address %d", current_source_address);
+    error_report(ErrorLevel::INFO, "J1939", msg);
+}
+
+void process_incoming_address_claim(const can_frame* frame) {
+    uint8_t incoming_addr = frame->can_id & 0xFF;
+    if (incoming_addr != current_source_address) {
+        return; // Claim for a different address, we don't care
+    }
+
+    // Conflict! Someone is claiming our address.
+    uint64_t their_name;
+    memcpy(&their_name, frame->data, 8);
+
+    if (config.j1939_name < their_name) {
+        // Our NAME is smaller, we win. Defend our address.
+        send_address_claim();
+        error_report(ErrorLevel::INFO, "J1939", "Address contention won, defending address.");
+    } else {
+        // Their NAME is smaller, we lose.
+        error_report(ErrorLevel::CRITICAL, "J1939", "Address contention lost. Cannot claim address.");
+        ac_state = AC_STATE_CANNOT_CLAIM;
+        current_source_address = 254; // Use NULL address
+    }
+}
+
+// --- Task Function ---
 
 void j1939_task_fn(void* pvParameters) {
-    // Initialize the CAN driver
     if (!mcp2515_init()) {
-        Serial.println("MCP2515 Init Failed! Halting J1939 Task.");
+        error_report(ErrorLevel::CRITICAL, "J1939", "MCP2515 Init Failed! Halting task.");
         vTaskDelete(NULL);
     }
+
+    current_source_address = config.j1939_node_address;
+    ac_state = AC_STATE_UNCLAIMED;
 
     J1939TxRequest tx_request;
     can_frame received_frame;
 
     for (;;) {
-        // 1. Check for requests to transmit a PGN
-        if (xQueueReceive(j1939_tx_queue, &tx_request, 0) == pdPASS) {
+        // --- State Machine for Address Claiming ---
+        switch (ac_state) {
+            case AC_STATE_UNCLAIMED:
+                send_address_claim();
+                claim_start_time = millis();
+                ac_state = AC_STATE_CLAIMING;
+                break;
+
+            case AC_STATE_CLAIMING:
+                if (millis() - claim_start_time > 250) {
+                    // 250ms has passed without conflict, we have successfully claimed the address.
+                    ac_state = AC_STATE_CLAIMED;
+                    char msg[50];
+                    sprintf(msg, "Address %d claimed successfully.", current_source_address);
+                    error_report(ErrorLevel::INFO, "J1939", msg);
+                }
+                break;
+
+            case AC_STATE_CLAIMED:
+            case AC_STATE_CANNOT_CLAIM:
+                // Do nothing, just continue normal operation
+                break;
+        }
+
+        // --- Message Processing ---
+        if (mcp2515_receive(&received_frame)) {
+            uint32_t pgn = (received_frame.can_id >> 8) & 0x1FFFF;
+
+            if (pgn == PGN_ADDRESS_CLAIMED) {
+                process_incoming_address_claim(&received_frame);
+            } else if (!tp_handler_process_frame(&received_frame)) {
+                xQueueSend(j1939_rx_queue, &received_frame, 0);
+            }
+        }
+
+        if (ac_state == AC_STATE_CLAIMED && xQueueReceive(j1939_tx_queue, &tx_request, 0) == pdPASS) {
             can_frame frame_to_send;
             uint8_t request_data[3];
             request_data[0] = tx_request.pgn & 0xFF;
             request_data[1] = (tx_request.pgn >> 8) & 0xFF;
             request_data[2] = (tx_request.pgn >> 16) & 0xFF;
 
-            frame_to_send.can_id = (6UL << 26) | ((uint32_t)J1939_PGN_REQUEST << 8) | ((uint32_t)tx_request.dest_address << 16) | config.j1939_node_address;
+            frame_to_send.can_id = (6UL << 26) | (PGN_REQUEST << 8) | (tx_request.dest_address << 16) | current_source_address;
             frame_to_send.can_dlc = 3;
             memcpy(frame_to_send.data, request_data, 3);
             mcp2515_transmit(&frame_to_send);
         }
 
-        // 2. Check for received CAN frames
-        if (mcp2515_receive(&received_frame)) {
-            // Send the raw frame to the RX queue for other tasks to process
-            xQueueSend(j1939_rx_queue, &received_frame, pdMS_TO_TICKS(10));
-        }
-
-        // 3. Yield to other tasks
         vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 
-// --- Public API Implementation ---
+// --- Public API ---
 
 void j1939_handler_init() {
-    // Create the queues, allocating them in PSRAM
-    j1939_tx_queue = xQueueCreateStatic(10, sizeof(J1939TxRequest), (uint8_t*)ps_malloc(10 * sizeof(J1939TxRequest)), new StaticQueue_t);
-    j1939_rx_queue = xQueueCreateStatic(20, sizeof(can_frame), (uint8_t*)ps_malloc(20 * sizeof(can_frame)), new StaticQueue_t);
+    j1939_tx_queue = xQueueCreate(10, sizeof(J1939TxRequest));
+    j1939_rx_queue = xQueueCreate(20, sizeof(can_frame));
+    xTaskCreate(j1939_task_fn, "J1939 Task", 4096, NULL, 5, NULL);
+}
 
-    // Create the J1939 task
-    xTaskCreate(
-        j1939_task_fn,
-        "J1939 Task",
-        4096, // Stack size
-        NULL,
-        5,    // High priority to not miss CAN frames
-        NULL
-    );
+uint8_t j1939_get_source_address() {
+    return current_source_address;
 }

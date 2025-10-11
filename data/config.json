@@ -1,6 +1,8 @@
 {
   "comment": "J1939 Diagnostic Tool Configuration v2.2.0",
   "j1939_node_address": 128,
+  "j1939_name": "0x8012345678ABCD00",
+  "comment_name": "J1939 NAME is a 64-bit value that uniquely identifies the device. Structure: Arbitrary Address Capable (bit 63), Industry Group, Vehicle System Instance, Vehicle System, Function, Function Instance, ECU Instance, Manufacturer Code, Identity Number",
   "wifi": {
     "ssid": "YOUR_WIFI_SSID",
     "password": ""

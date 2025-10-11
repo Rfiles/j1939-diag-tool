@@ -1,5 +1,43 @@
 # Histórico de Alterações do Projeto
 
+### v3.3.0 (2025-10-11)
+- **Base de Dados de Veículos e Centralinas:**
+  - Implementada a fundação para um sistema de diagnóstico baseado em modelos de veículos.
+  - Criado um ficheiro `vehicles.json` na pasta `data/` para armazenar uma base de dados de modelos de autocarros (diesel e elétricos) e as suas respetivas centralinas (ECUs).
+  - Desenvolvido um novo módulo `vehicle_db_handler` para carregar, interpretar e guardar a base de dados a partir do LittleFS.
+  - Adicionados novos comandos à CLI para interagir com a base de dados:
+    - `list_models`: Lista todos os modelos de veículos disponíveis.
+    - `show_model <name>`: Mostra os detalhes de um modelo específico, incluindo as suas ECUs e PGNs de interesse.
+    - `save_db`: Guarda para o ficheiro `vehicles.json` quaisquer alterações feitas em memória (preparação para futuras funcionalidades de edição).
+
+### v3.2.0 (2025-10-11)
+- **Leitura de VIN (Número de Identificação do Veículo):**
+  - Implementada a descodificação do PGN 65260 para extrair o VIN do veículo.
+  - O `pdu_processor` agora interpreta a mensagem de VIN recebida através do protocolo de transporte.
+  - Adicionado um novo comando `request_vin` à CLI para solicitar ativamente o VIN à rede.
+
+### v3.1.0 (2025-10-11)
+- **Implementação do J1939 Address Claiming:**
+  - O `j1939_handler` foi refatorado para implementar a máquina de estados de reivindicação de endereço, tornando o dispositivo compatível com o standard J1939.
+  - No arranque, o dispositivo agora reivindica o seu endereço preferido e gere conflitos com outros dispositivos na rede, comparando o seu NAME de 64 bits.
+  - Em caso de conflito perdido, o dispositivo adota o endereço NULO (254) e opera em modo de escuta.
+  - O NAME J1939 do dispositivo é agora configurável através do `config.json`.
+
+### v3.0.0 (2025-10-11)
+- **Implementação do Protocolo de Transporte J1939 (TP):**
+  - Criado um novo módulo `tp_handler` para gerir mensagens J1939 multi-pacote.
+  - Implementado o suporte para a remontagem de mensagens broadcast (TP.CM BAM).
+  - O `j1939_handler` foi atualizado para passar frames de transporte para o novo módulo.
+  - Adicionada uma nova tarefa `pdu_processor` que recebe as mensagens completas e remontadas, preparando o sistema para a interpretação de mensagens de diagnóstico (DM).
+
+### v2.9.0 (2025-10-11)
+- **Refatoração da Arquitetura da CLI:**
+  - O sistema de CLI foi completamente reescrito para uma arquitetura modular e extensível, baseada no "Command Pattern".
+  - A lógica de cada comando foi movida para um ficheiro individual em `src/cli/commands/`.
+  - Criado um registo central (`cli_registry`) para a descoberta e execução de comandos, eliminando a necessidade de um bloco `if/else if` monolítico.
+  - Adicionar novos comandos ao sistema tornou-se mais simples e seguro.
+  - A experiência de utilização da CLI foi melhorada com a adição de eco de caracteres e suporte para backspace.
+
 ### v2.8.0 (2025-10-11)
 - **Licença de Desenvolvimento e Controlo de Versão:**
   - Adicionado um comando secreto `_dev_license` para ativar uma licença de desenvolvimento com usos ilimitados.

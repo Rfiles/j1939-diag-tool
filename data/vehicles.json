@@ -1,0 +1,56 @@
+{
+  "vehicles": [
+    {
+      "model_name": "DieselBus_ModelA",
+      "type": "diesel",
+      "ecus": [
+        {
+          "name": "Engine",
+          "sa": 0,
+          "pgns_of_interest": [65262, 65263, 65271]
+        },
+        {
+          "name": "Gearbox",
+          "sa": 3,
+          "pgns_of_interest": [65272]
+        },
+        {
+          "name": "Tachograph",
+          "sa": 23,
+          "pgns_of_interest": [65217]
+        },
+        {
+          "name": "Suspension",
+          "sa": 35,
+          "pgns_of_interest": []
+        }
+      ]
+    },
+    {
+      "model_name": "ElectricBus_ModelB",
+      "type": "electric",
+      "ecus": [
+        {
+          "name": "BMS",
+          "sa": 24,
+          "pgns_of_interest": [64998, 64999]
+        },
+        {
+          "name": "MCU",
+          "sa": 11,
+          "pgns_of_interest": [65000]
+        },
+        {
+          "name": "VCU",
+          "sa": 17,
+          "pgns_of_interest": []
+        },
+        {
+          "name": "InsulationMonitor",
+          "sa": 41,
+          "pgns_of_interest": []
+        }
+      ]
+    }
+  ]
+}

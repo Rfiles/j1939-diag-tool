@@ -1,78 +1,87 @@
 # Ferramenta de Diagnóstico J1939 para ESP32
 
-**Versão Atual:** 2.4.0
+**Versão Atual:** 3.3.0
 
 ## Sobre o Projeto
 
-Esta é uma aplicação de diagnóstico J1939 de nível profissional para a plataforma ESP32. O projeto foi desenhado com foco em robustez, modularidade e performance, utilizando uma arquitetura multi-tarefa baseada em FreeRTOS para garantir uma operação concorrente e não-bloqueante.
+Esta é uma plataforma de diagnóstico J1939 de nível profissional para o ESP32, desenhada para ser robusta, modular e extensível. O firmware foi construído de raiz com uma arquitetura multi-tarefa (FreeRTOS), permitindo uma operação concorrente e não-bloqueante, ideal para a análise de redes de veículos em tempo real.
 
-A ferramenta permite a monitorização de redes J1939, o envio de pedidos de PGNs, e a telemetria de dados e eventos via MQTT. A configuração de parâmetros sensíveis é feita de forma segura através de uma interface de linha de comandos (CLI) e guardada na memória não-volátil (NVS) do dispositivo.
+O sistema é capaz de comunicar com redes J1939, interpretar protocolos complexos, e enviar telemetria para plataformas de IoT. Inclui um sistema de licenciamento por hardware e uma base de dados de veículos para permitir diagnósticos específicos por modelo, tornando-o uma base poderosa para uma ferramenta de diagnóstico comercial.
 
-## Funcionalidades Chave
+## Arquitetura do Software
 
-- **Arquitetura Multi-tarefa (FreeRTOS):** Cada subsistema (CAN, UI, CLI, Comunicações) corre de forma independente na sua própria tarefa, garantindo performance e responsividade.
-- **Telemetria Avançada via MQTT:** Publica dados da rede J1939 e eventos do sistema (erros, status) para um broker MQTT, incluindo dados de geolocalização (GPS) nos relatórios de erro.
-- **Configuração Segura via CLI:** As configurações de rede (Wi-Fi, MQTT) e de serviços (OTA) são geridas através de comandos na CLI e guardadas de forma segura na NVS, evitando a exposição de senhas em ficheiros de texto.
-- **Atualizações Over-the-Air (OTA):** O firmware pode ser atualizado remotamente através da rede Wi-Fi, sem necessidade de acesso físico ao dispositivo.
-- **Drivers Dedicados:** Drivers de baixo nível para o ecrã ST7789 e o controlador CAN MCP2515, escritos via SPI para máximo controlo e performance.
-- **Sistema de Ficheiros:** Utiliza LittleFS para carregar configurações base e outros recursos.
-- **Interface de Utilizador:** Inclui um sistema de menus interativo no ecrã e uma interface de linha de comandos completa via porta Serial.
+O coração do projeto é uma arquitetura modular baseada em tarefas FreeRTOS, onde cada responsabilidade principal é isolada no seu próprio módulo e tarefa.
 
-## Hardware Necessário
+- **`j1939_handler`**: Gere a camada física do CAN e implementa a lógica de **Address Claiming** para garantir uma integração segura na rede.
+- **`tp_handler`**: Implementa o **Protocolo de Transporte (TP)** do J1939, permitindo a remontagem de mensagens multi-pacote (BAM), essencial para ler dados de diagnóstico (DM) e outras informações extensas.
+- **`pdu_processor`**: Atua como o cérebro da análise de dados, recebendo mensagens completas do `tp_handler` e descodificando PGNs específicos, como o VIN.
+- **`comms_handler`**: Gere toda a conectividade de rede (Wi-Fi) e a comunicação com a plataforma de IoT (MQTT), incluindo a sincronização de tempo via NTP.
+- **`cli_handler`**: Oferece uma interface de linha de comandos modular e extensível para interagir com todas as funcionalidades do sistema.
+- **`license_handler`**: Gere um sistema de licenciamento avançado, com chaves ligadas ao hardware, usos limitados, e funcionalidades ativáveis.
+- **`vehicle_db_handler`**: Carrega e gere uma base de dados de modelos de veículos a partir de um ficheiro `vehicles.json`, permitindo um diagnóstico específico por modelo.
 
-- **Placa de Desenvolvimento:** [LilyGo T-Display S3](https://www.lilygo.cc/products/t-display-s3) (ESP32-S3)
-- **Módulo CAN:** Um transceiver CAN baseado no chip **MCP2515**.
-- **Módulo GPS:** [u-blox NEO-M8N](https://www.u-blox.com/en/product/neo-m8n-module) ou similar, com interface UART (opcional, para geolocalização).
+## Funcionalidades Implementadas
 
-## Software e Bibliotecas
-
-O projeto é construído sobre o **Arduino Core para ESP32 (v3.3.0 ou superior)** e utiliza as seguintes bibliotecas principais:
-
-- **FreeRTOS:** Integrado no core do ESP32, para gestão das tarefas.
-- **LittleFS:** Para o sistema de ficheiros.
-- **ArduinoJson:** Para parsing do ficheiro de configuração `config.json`.
-- **PubSubClient:** Para a comunicação MQTT.
-- **WiFi, ESPmDNS, ArduinoOTA:** Para conectividade Wi-Fi e atualizações OTA.
-- **Preferences:** Para acesso à NVS (Non-Volatile Storage).
+- **Stack J1939:**
+  - **Address Claiming:** Negociação de endereço na rede para evitar conflitos.
+  - **Transport Protocol (TP):** Suporte para receber mensagens multi-pacote (BAM).
+- **Diagnóstico:**
+  - **Leitura de VIN:** Comando `request_vin` para pedir e descodificar o Número de Identificação do Veículo (PGN 65260).
+  - Base para leitura de Mensagens de Diagnóstico (DM) através do TP.
+- **Conectividade e Telemetria:**
+  - Ligação a redes **Wi-Fi**.
+  - Publicação de dados e eventos para um broker **MQTT**.
+  - Sincronização da hora do sistema com um servidor **NTP** para timestamps precisos.
+- **Sistema de Licenciamento:**
+  - Geração de chaves de 12 caracteres ligadas ao ID de hardware único do dispositivo.
+  - Chaves com número de usos, flags de funcionalidades e data de validade para ativação.
+  - Proteção contra brute-force e uso único de chaves.
+- **Base de Dados de Veículos:**
+  - Carregamento de uma base de dados de modelos de autocarros (Diesel e Elétricos) a partir de um ficheiro `vehicles.json`.
+  - Comandos na CLI para listar e visualizar os modelos da base de dados.
+- **Configuração Flexível:**
+  - Configurações por defeito carregadas de `config.json`.
+  - Configurações do utilizador (incluindo senhas) guardadas de forma segura na **NVS**.
+  - Gestão completa das configurações via CLI, sem necessidade de recompilar.
+- **Atualizações OTA:** Capacidade de atualizar o firmware remotamente via Wi-Fi.
 
 ## Como Começar
 
-### 1. Pré-requisitos
-
-- É recomendado o uso de [PlatformIO](https://platformio.org/) para compilar e carregar o projeto.
-
-### 2. Compilar e Carregar
-
-- **Compilar:** `pio run`
-- **Carregar para o dispositivo:** `pio run --target upload`
-
-### 3. Configuração Inicial
-
-Na primeira utilização, é necessário configurar as credenciais de rede.
-
-1.  Ligue-se ao dispositivo através de um monitor Serial (baud rate: 115200).
-2.  Use os comandos da CLI para configurar o Wi-Fi:
+1.  **Hardware:** Precisarás de uma placa **LilyGo T-Display S3**, um transceiver CAN **MCP2515** e, opcionalmente, um módulo GPS **u-blox NEO-M8N**.
+2.  **Compilação:** É recomendado usar **PlatformIO**. Clona o projeto e executa `pio run` para compilar e `pio run --target upload` para carregar.
+3.  **Configuração Inicial:** Após o primeiro arranque, liga-te via monitor série (115200 baud) e configura a tua rede Wi-Fi:
     ```bash
-    set wifi_ssid "O_NOME_DA_SUA_REDE"
-    set wifi_pass "A_SUA_SENHA_WIFI"
-    ```
-3.  Configure os detalhes do seu servidor MQTT e da segurança OTA:
-    ```bash
-    set mqtt_broker 192.168.1.100
-    set ota_pass umasenhaparaota
-    ```
-4.  Guarde as configurações para que persistam após o reinício:
-    ```bash
+    set wifi_ssid "O_NOME_DA_TUA_REDE"
+    set wifi_pass "A_TUA_SENHA"
     save
     ```
-5.  Reinicie o dispositivo.
+4.  **Ativação da Licença:**
+    - Obtém o ID do teu dispositivo com o comando: `get_hw_id`
+    - Usa o script `generate_license.py` para criar uma chave de licença.
+    - Ativa a licença no dispositivo com: `activate <a_tua_chave_de_licenca>`
 
 ## Utilização
 
-Após a configuração, o dispositivo irá ligar-se à rede e começar a operar. Pode interagir com o mesmo através do sistema de menus no ecrã ou da interface de linha de comandos.
+Após a configuração, podes começar a interagir com o dispositivo. Para uma lista completa e detalhada de todos os comandos, consulta o ficheiro:
 
-Para uma documentação detalhada de todos os comandos da CLI, consulte o ficheiro [CLI_COMMANDS.md](CLI_COMMANDS.md).
+**[➡️ Documentação Completa da CLI (CLI_COMMANDS.md)](CLI_COMMANDS.md)**
+
+## Roadmap de Futuras Funcionalidades
+
+Este projeto tem uma base sólida que permite a implementação de muitas outras funcionalidades profissionais:
+
+- **Interpretação de Mensagens de Diagnóstico (DM):**
+  - Implementar a descodificação completa de mensagens **DM1** (Erros Ativos) e **DM2** (Erros Passivos) para extrair os códigos de erro (SPN, FMI, OC).
+  - Adicionar comandos para limpar os erros (**DM3**, **DM11**).
+- **Leitura de Dados por Centralina:**
+  - Implementar o comando `read_ecu <nome_ecu>` para pedir todos os PGNs de interesse de uma centralina específica, com base no modelo de veículo selecionado.
+- **Gestão da Base de Dados via CLI:**
+  - Adicionar comandos para criar e editar modelos de veículos e ECUs diretamente a partir da linha de comandos (`add_model`, `add_ecu`, etc.).
+- **Transferência de Ficheiros:**
+  - Implementar comandos `upload_file` e `download_file` para gerir remotamente os ficheiros no sistema LittleFS (ex: `vehicles.json`).
+- **Melhorias na Interface de Utilizador (UI):**
+  - Mostrar no ecrã do dispositivo os dados lidos em tempo real, os erros de diagnóstico, e o estado da licença.
 
 ---
 
-Para o histórico de alterações completo, consulte o ficheiro `changelog.md`.
+Para o histórico de alterações completo, consulta o ficheiro `changelog.md`.

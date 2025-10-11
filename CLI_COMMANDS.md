@@ -1,82 +1,85 @@
 # Documentação da Interface de Linha de Comandos (CLI)
 
-Esta é a documentação para a Interface de Linha de Comandos (CLI) da Ferramenta de Diagnóstico J1939.
+Esta é a documentação para a Interface de Linha de Comandos (CLI) da Ferramenta de Diagnóstico J1939 (Versão 3.3.0).
 
-## Comandos Disponíveis
-
-### `help`
-
-Mostra a mensagem de ajuda com a lista de todos os comandos disponíveis.
-
-**Sintaxe:**
-```
-help
-```
-
----
-
-### `request <pgn>`
-
-Envia um pedido de PGN (Parameter Group Number) para a rede J1939.
-
-**Sintaxe:**
-```
-request <pgn>
-```
-
-**Parâmetros:**
-- `<pgn>`: O número do PGN a ser solicitado (em formato decimal).
-
-**Exemplo:**
-```
-request 65262
-```
-
----
+## Comandos de Configuração
 
 ### `set <key> <value>`
+Define o valor de uma chave de configuração na memória. A alteração só se torna permanente após usar o comando `save`.
 
-Define o valor de uma chave de configuração na memória do dispositivo. Esta alteração não é persistente e será perdida ao reiniciar, a menos que o comando `save` seja executado.
+- **Sintaxe:** `set <key> <value>`
+- **Exemplo:** `set wifi_ssid "A Minha Rede"`
+- **Chaves Disponíveis:**
+  - `wifi_ssid`, `wifi_pass`: Credenciais da rede Wi-Fi.
+  - `mqtt_broker`, `mqtt_port`, `mqtt_topic`: Configurações do servidor MQTT.
+  - `ota_host`, `ota_pass`: Nome e senha para atualizações OTA.
+  - `f_wifi`, `f_mqtt`, `f_gps`: Ativa/desativa funcionalidades (`true` ou `false`).
 
-**Sintaxe:**
-```
-set <key> <value>
-```
+### `save`
+Guarda todas as configurações atuais para a memória persistente (NVS).
 
-**Parâmetros:**
-- `<key>`: A chave de configuração a ser alterada.
-- `<value>`: O novo valor para a chave. Se o valor contiver espaços, deve ser colocado entre aspas.
-
-**Chaves Disponíveis:**
-- `wifi_ssid`: Nome da rede Wi-Fi (SSID).
-- `wifi_pass`: Senha da rede Wi-Fi.
-- `mqtt_broker`: Endereço do servidor MQTT.
-- `mqtt_port`: Porta do servidor MQTT (ex: 1883).
-- `mqtt_topic`: Tópico MQTT para publicação de dados.
-- `ota_host`: Nome do dispositivo (hostname) para as atualizações OTA.
-- `ota_pass`: Senha para as atualizações OTA.
-
-**Exemplo:**
-```
-set wifi_ssid "A Minha Rede Wi-Fi"
-set wifi_pass AMinhaSenhaSuperSegura123
-set mqtt_broker 192.168.1.100
-```
+- **Sintaxe:** `save`
 
 ---
 
-### `save`
+## Comandos de Diagnóstico J1939
 
-Guarda todas as configurações atuais (que estão em memória) para a memória persistente (NVS - Non-Volatile Storage). As configurações guardadas serão carregadas automaticamente no próximo arranque do dispositivo.
+### `request <pgn>`
+Envia um pedido global para um PGN (Parameter Group Number) específico.
 
-**Sintaxe:**
-```
-save
-```
+- **Sintaxe:** `request <pgn>`
+- **Exemplo:** `request 65262`
 
-**Exemplo de Utilização (Configurar e Guardar Wi-Fi):**
-```
-set wifi_ssid AMinhaRede
-set wifi_pass AMinhaSenha
-save
-```
+### `request_vin`
+Envia um pedido global para o PGN de Identificação do Veículo (VIN).
+
+- **Sintaxe:** `request_vin`
+
+---
+
+## Comandos do Sistema de Licenciamento
+
+### `get_hw_id`
+Mostra o ID de Hardware único do dispositivo, necessário para gerar uma licença.
+
+- **Sintaxe:** `get_hw_id`
+
+### `activate <license_key>`
+Ativa uma licença no dispositivo.
+
+- **Sintaxe:** `activate <key>`
+- **Exemplo:** `activate AbCd12EfGhIJ`
+
+### `get_license_info`
+Verifica o estado da licença atual, incluindo usos restantes e funcionalidades ativas.
+
+- **Sintaxe:** `get_license_info`
+
+---
+
+## Comandos da Base de Dados de Veículos
+
+### `list_models`
+Lista todos os modelos de veículos disponíveis na base de dados `vehicles.json`.
+
+- **Sintaxe:** `list_models`
+
+### `show_model <model_name>`
+Mostra os detalhes de um modelo de veículo específico, incluindo as suas ECUs e PGNs de interesse.
+
+- **Sintaxe:** `show_model <model_name>`
+- **Exemplo:** `show_model DieselBus_ModelA`
+
+### `save_db`
+Guarda o estado atual da base de dados de veículos para o ficheiro `vehicles.json` (útil para futuras funcionalidades de edição).
+
+- **Sintaxe:** `save_db`
+
+---
+
+## Outros Comandos
+
+### `help`
+Mostra uma lista compacta de todos os comandos disponíveis.
+
+- **Sintaxe:** `help`

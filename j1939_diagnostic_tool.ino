@@ -13,17 +13,26 @@
 #include "src/core/error_handler.h"
 #include "src/core/settings_handler.h"
 #include "src/core/license_handler.h"
+#include "src/j1939/tp_handler.h"
+#include "src/j1939/pdu_processor.h"
+#include "src/core/vehicle_db_handler.h"
 
 void setup() {
     // Start serial for debugging
     Serial.begin(115200);
-    Serial.println("\n--- J1939 Diagnostic Tool v2.6.0 ---");
+    Serial.println("\n--- J1939 Diagnostic Tool v3.3.0 ---");
 
     // Load configuration from LittleFS (defaults)
     if (!filesystem_init()) {
         // We can't use the full error_report here as comms aren't up yet.
         Serial.println("CRITICAL: Filesystem or config error. Halting.");
         while(1);
+    }
+
+    // Load the vehicle database
+    if (!vehicle_db_init()) {
+        // This is not a critical error, we can continue without the DB.
+        error_report(ErrorLevel::WARN, "Main", "Could not load vehicle database.");
     }
 
     // Initialize NVS and load persistent settings, overriding defaults
@@ -35,6 +44,10 @@ void setup() {
 
     // Initialize the licensing system
     license_handler_init();
+
+    // Initialize J1939 protocol handlers
+    tp_handler_init();
+    pdu_processor_init();
 
     // Initialize handlers based on feature flags
     if (config.features.wifi_enabled) {

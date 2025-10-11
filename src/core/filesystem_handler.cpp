@@ -36,6 +36,8 @@ bool filesystem_init() {
 
     // Load all values into the global config struct
     config.j1939_node_address = doc["j1939_node_address"] | 128;
+    const char* name_str = doc["j1939_name"] | "0x8012345678ABCD00";
+    config.j1939_name = strtoull(name_str, NULL, 16);
 
     config.wifi.ssid = doc["wifi"]["ssid"].as<String>();
     config.wifi.password = doc["wifi"]["password"].as<String>();
