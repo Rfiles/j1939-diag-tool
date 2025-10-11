@@ -1,0 +1,43 @@
+{
+  "comment": "J1939 Diagnostic Tool Configuration v2.2.0",
+  "j1939_node_address": 128,
+  "wifi": {
+    "ssid": "YOUR_WIFI_SSID",
+    "password": ""
+  },
+  "mqtt": {
+    "broker": "your_mqtt_broker_address",
+    "port": 1883,
+    "topic": "j1939/diag_tool/data"
+  },
+  "buttons": {
+    "select_pin": 0,
+    "next_pin": 14
+  },
+  "display": {
+    "spi_host": 2,
+    "sclk_pin": 7,
+    "mosi_pin": 6,
+    "cs_pin": 38,
+    "dc_pin": 39,
+    "rst_pin": 45,
+    "bl_pin": 46
+  },
+  "mcp2515": {
+    "spi_host": 3,
+    "sclk_pin": 12,
+    "mosi_pin": 11,
+    "miso_pin": 13,
+    "cs_pin": 10
+  },
+  "ota": {
+    "hostname": "j1939-diag-tool",
+    "password": ""
+  },
+  "features": {
+    "comment": "Enable or disable core features",
+    "wifi_enabled": true,
+    "mqtt_enabled": true,
+    "gps_enabled": true
+  }
+}
