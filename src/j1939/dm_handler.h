@@ -63,5 +63,21 @@ void dm_parse_dm4(const uint8_t* data, uint16_t length);
  */
 void dm_parse_dm25(const uint8_t* data, uint16_t length);
 
+/**
+ * @brief Parses a raw DM11 message payload (PGN 65235).
+ * 
+ * @param data Pointer to the raw byte array of the message.
+ * @param length The length of the data array.
+ */
+void dm_parse_dm11(const uint8_t* data, uint16_t length);
+
+/**
+ * @brief Parses a raw DM13 message payload (PGN 65237).
+ * 
+ * @param data Pointer to the raw byte array of the message.
+ * @param length The length of the data array.
+ */
+void dm_parse_dm13(const uint8_t* data, uint16_t length);
+
 
 #endif // DM_HANDLER_H

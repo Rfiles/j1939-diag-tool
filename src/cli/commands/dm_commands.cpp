@@ -98,3 +98,40 @@ const CliCommand request_dm25_command = {
     "Request expanded freeze frame from an ECU (DM25)",
     request_dm25_execute
 };
+
+// --- request_dm11 ---
+#define PGN_DM11 65235
+void request_dm11_execute(const std::vector<std::string>& args) {
+    if (args.size() < 2) {
+        cli_printf("Usage: request_dm11 <address>\n");
+        return;
+    }
+    uint8_t dest_address = std::stoi(args[1]);
+    J1939TxRequest tx_request = { PGN_DM11, dest_address };
+    if (xQueueSend(j1939_tx_queue, &tx_request, 0) != pdPASS) {
+        cli_printf("Failed to send DM11 request.\n");
+    } else {
+        cli_printf("DM11 request sent to address %d.\n", dest_address);
+    }
+}
+const CliCommand request_dm11_command = {
+    "request_dm11",
+    "Request memory access (DM11)",
+    request_dm11_execute
+};
+
+// --- request_dm13 ---
+#define PGN_DM13 65237
+void request_dm13_execute(const std::vector<std::string>& args) {
+    J1939TxRequest tx_request = { PGN_DM13, 0xFF }; // Global request
+    if (xQueueSend(j1939_tx_queue, &tx_request, 0) != pdPASS) {
+        cli_printf("Failed to send DM13 request.\n");
+    } else {
+        cli_printf("DM13 request sent.\n");
+    }
+}
+const CliCommand request_dm13_command = {
+    "request_dm13",
+    "Request stop/start broadcast (DM13)",
+    request_dm13_execute
+};

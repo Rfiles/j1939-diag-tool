@@ -31,6 +31,8 @@ extern const CliCommand clear_dtcs_command;
 extern const CliCommand request_dm24_command;
 extern const CliCommand request_dm4_command;
 extern const CliCommand request_stream_command;
+extern const CliCommand request_dm11_command;
+extern const CliCommand request_dm13_command;
 
 // File transfer commands
 extern const CliCommand download_command;
@@ -72,6 +74,8 @@ void cli_register_all_commands() {
     cli_register_command(&request_dm24_command);
     cli_register_command(&request_dm4_command);
     cli_register_command(&request_stream_command);
+    cli_register_command(&request_dm11_command);
+    cli_register_command(&request_dm13_command);
 
     // File transfer commands
     cli_register_command(&download_command);

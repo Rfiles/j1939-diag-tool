@@ -1,6 +1,6 @@
 # Ferramenta de Diagnóstico J1939 para ESP32
 
-**Versão Atual:** 3.3.0
+**Versão Atual:** 3.4.0
 
 ## Sobre o Projeto
 
@@ -28,6 +28,7 @@ O coração do projeto é uma arquitetura modular baseada em tarefas FreeRTOS, o
 - **Diagnóstico:**
   - **Leitura de VIN:** Comando `request_vin` para pedir e descodificar o Número de Identificação do Veículo (PGN 65260).
   - Base para leitura de Mensagens de Diagnóstico (DM) através do TP.
+  - Implementação de **DM11** e **DM13**.
 - **Conectividade e Telemetria:**
   - Ligação a redes **Wi-Fi**.
   - Publicação de dados e eventos para um broker **MQTT**.
@@ -72,7 +73,7 @@ Este projeto tem uma base sólida que permite a implementação de muitas outras
 
 - **Interpretação de Mensagens de Diagnóstico (DM):**
   - Implementar a descodificação completa de mensagens **DM1** (Erros Ativos) e **DM2** (Erros Passivos) para extrair os códigos de erro (SPN, FMI, OC).
-  - Adicionar comandos para limpar os erros (**DM3**, **DM11**).
+  - Adicionar comandos para limpar os erros (**DM3**).
 - **Leitura de Dados por Centralina:**
   - Implementar o comando `read_ecu <nome_ecu>` para pedir todos os PGNs de interesse de uma centralina específica, com base no modelo de veículo selecionado.
 - **Gestão da Base de Dados via CLI:**

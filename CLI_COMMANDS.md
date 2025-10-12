@@ -1,6 +1,6 @@
 # Documentação da Interface de Linha de Comandos (CLI)
 
-Esta é a documentação para a Interface de Linha de Comandos (CLI) da Ferramenta de Diagnóstico J1939 (Versão 3.3.0).
+Esta é a documentação para a Interface de Linha de Comandos (CLI) da Ferramenta de Diagnóstico J1939 (Versão 3.4.0).
 
 ## Comandos de Configuração
 
@@ -34,6 +34,17 @@ Envia um pedido global para um PGN (Parameter Group Number) específico.
 Envia um pedido global para o PGN de Identificação do Veículo (VIN).
 
 - **Sintaxe:** `request_vin`
+
+### `request_dm11 <address>`
+Envia um pedido para a mensagem de diagnóstico DM11 (Memory access) para um endereço específico.
+
+- **Sintaxe:** `request_dm11 <address>`
+- **Exemplo:** `request_dm11 0`
+
+### `request_dm13`
+Envia um pedido global para a mensagem de diagnóstico DM13 (Stop/start broadcast).
+
+- **Sintaxe:** `request_dm13`
 
 ---
 

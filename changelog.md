@@ -1,5 +1,11 @@
 # Histórico de Alterações do Projeto
 
+### v3.4.0 (2025-10-12)
+- **Implementação de DM11 e DM13:**
+  - Adicionados os comandos `request_dm11` e `request_dm13` à CLI para solicitar as mensagens de diagnóstico DM11 (Memory access) e DM13 (Stop/start broadcast).
+  - O `dm_handler` foi expandido para incluir funções de parsing para as mensagens DM11 e DM13.
+  - O `pdu_processor` foi atualizado para processar as novas mensagens de diagnóstico.
+
 ### v3.23.0 (2025-10-11)
 - **Diagnóstico Avançado com DM4 (Freeze Frame):**
   - Implementada a capacidade de pedir e descodificar mensagens DM4 (Freeze Frame).
