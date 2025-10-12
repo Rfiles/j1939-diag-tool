@@ -41,4 +41,11 @@ void j1939_handler_init();
  */
 uint8_t j1939_get_source_address();
 
+/**
+ * @brief Gets the timestamp of the last received J1939 message.
+ * 
+ * @return The timestamp of the last received message, in milliseconds.
+ */
+unsigned long j1939_get_last_rx_time();
+
 #endif // J1939_HANDLER_H

@@ -27,5 +27,8 @@ void st7789_fill_screen(uint16_t color);
 // Note: This is a very basic implementation with a fixed font.
 void st7789_draw_text(const char* text, int16_t x, int16_t y, uint16_t color, uint16_t bg_color);
 
+// Draw a filled rectangle
+void st7789_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+
 
 #endif // ST7789_DRIVER_H

@@ -24,6 +24,7 @@ Para garantir a robustez e modularidade, o projeto segue padrões de desenvolvim
 - **Abstração de Hardware:** Os drivers para componentes específicos (ex: transceiver CAN MCP2515, ecrã ST7789) estão isolados na sua própria camada (`src/driver`), facilitando a adaptação a outro hardware.
 
 Utilizar vector e map para programação de funções quando aplicavel.
+Ser menos verboso nas respostas. Explica so se solicitado.
 
 ## 3. Funcionalidades Implementadas
 

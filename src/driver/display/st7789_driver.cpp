@@ -130,3 +130,15 @@ void st7789_draw_text(const char* text, int16_t x, int16_t y, uint16_t color, ui
         text++;
     }
 }
+
+void st7789_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color) {
+    set_addr_window(x, y, x + w - 1, y + h - 1);
+    digitalWrite(config.display.dc_pin, HIGH);
+    digitalWrite(config.display.cs_pin, LOW);
+    SPI.beginTransaction(spi_settings);
+    for (long i = 0; i < w * h; i++) {
+        SPI.transfer16(color);
+    }
+    SPI.endTransaction();
+    digitalWrite(config.display.cs_pin, HIGH);
+}

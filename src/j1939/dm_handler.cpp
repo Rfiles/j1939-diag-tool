@@ -122,3 +122,13 @@ void dm_parse_dm13(const uint8_t* data, uint16_t length) {
     sprintf(msg, "DM13 received. Length: %d", length);
     error_report(ErrorLevel::INFO, "DM13", msg);
 }
+
+void dm_parse_dm3(const uint8_t* data, uint16_t length) {
+    if (length < 1) {
+        error_report(ErrorLevel::WARN, "DM3", "Invalid payload length.");
+        return;
+    }
+    char msg[100];
+    sprintf(msg, "DM3 received. Length: %d", length);
+    error_report(ErrorLevel::INFO, "DM3", msg);
+}

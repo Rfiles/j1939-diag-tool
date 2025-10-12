@@ -35,6 +35,8 @@ void pdu_processor_task_fn(void* pv) {
                 dm_parse_dm11(pdu.data, pdu.data_length);
             } else if (pdu.pgn == 65237) { // DM13
                 dm_parse_dm13(pdu.data, pdu.data_length);
+            } else if (pdu.pgn == 65228) { // DM3
+                dm_parse_dm3(pdu.data, pdu.data_length);
             } else if (pdu.pgn == 65260) { // Vehicle Identification (VIN)
                 // The VIN is a string of ASCII characters, terminated by a '*'
                 char vin_buffer[30]; // VIN is typically 17 chars

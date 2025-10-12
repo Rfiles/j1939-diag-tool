@@ -22,6 +22,7 @@ QueueHandle_t j1939_rx_queue;
 static J1939_ADDRESS_CLAIM_STATE ac_state = AC_STATE_UNCLAIMED;
 static uint8_t current_source_address = 254; // Start with NULL address
 static unsigned long claim_start_time = 0;
+static unsigned long last_rx_time = 0;
 
 // --- Private Functions ---
 
@@ -117,6 +118,7 @@ void j1939_task_fn(void* pvParameters) {
 
         // --- Message Processing ---
         if (mcp2515_receive(&received_frame)) {
+            last_rx_time = millis();
             uint32_t pgn = (received_frame.can_id >> 8) & 0x1FFFF;
 
             if (pgn == PGN_ADDRESS_CLAIMED) {
@@ -155,4 +157,8 @@ void j1939_handler_init() {
 
 uint8_t j1939_get_source_address() {
     return current_source_address;
+}
+
+unsigned long j1939_get_last_rx_time() {
+    return last_rx_time;
 }

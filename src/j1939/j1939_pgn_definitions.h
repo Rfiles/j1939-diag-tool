@@ -18,7 +18,8 @@ static std::map<uint32_t, std::vector<uint32_t>> pgn_to_spns_map = {
     {65271, {168}},      // VD: Vehicle Voltage
     {65276, {96}},        // LFC1: Fuel Level
     {65235, {}},          // DM11: Memory access response
-    {65237, {}}           // DM13: Stop/start broadcast
+    {65237, {}},           // DM13: Stop/start broadcast
+    {65228, {}}           // DM3: Clear Previously Active DTCs
 };
 
 // Reverse map for convenience: maps an SPN to its parent PGN
