@@ -5,8 +5,7 @@
  */
 
 #include "cli_registry.h"
-#include <Arduino.h>
-#include <vector>
+#include "cli_output.h"
 
 // A vector to store pointers to all registered commands
 static std::vector<const CliCommand*> command_registry;
@@ -27,11 +26,14 @@ const CliCommand* cli_find_command(const std::string& name) {
 }
 
 void cli_print_full_help() {
-    Serial.println("--- J1939 Diag Tool CLI v2.9 ---");
-    Serial.println("Available commands:");
+    cli_printf("--- J1939 Diag Tool CLI v3.12.0 ---\n");
+    cli_printf("Available commands:\n");
     for (const auto* cmd : command_registry) {
         if (cmd != nullptr) {
-            Serial.printf("  %-20s - %s\n", cmd->name, cmd->help_text);
+            // Do not show hidden commands in help
+            if (cmd->name[0] != '_') {
+                cli_printf("  %-20s - %s\n", cmd->name, cmd->help_text);
+            }
         }
     }
 }

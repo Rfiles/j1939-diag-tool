@@ -9,17 +9,24 @@
 #include <LittleFS.h>
 #include <ArduinoJson.h>
 
+#include "shared_resources.h"
+
 // In-memory representation of the vehicle database
 static std::vector<VehicleModel> vehicle_database;
+// Pointer to the currently selected vehicle model
+static const VehicleModel* active_vehicle_model = nullptr;
 
 // The capacity of the JsonDocument. This needs to be large enough for the entire file.
 // Adjust this value if you add more models or data.
 const int JSON_CAPACITY = 4096;
 
 bool vehicle_db_init() {
+    if (xSemaphoreTake(vehicle_db_mutex, portMAX_DELAY) != pdTRUE) return false;
+
     File db_file = LittleFS.open("/vehicles.json", "r");
     if (!db_file) {
         error_report(ErrorLevel::ERROR, "VehicleDB", "vehicles.json not found.");
+        xSemaphoreGive(vehicle_db_mutex);
         return false;
     }
 
@@ -29,6 +36,7 @@ bool vehicle_db_init() {
 
     if (error) {
         error_report(ErrorLevel::ERROR, "VehicleDB", "Failed to parse vehicles.json.");
+        xSemaphoreGive(vehicle_db_mutex);
         return false;
     }
 
@@ -54,10 +62,13 @@ bool vehicle_db_init() {
     }
 
     error_report(ErrorLevel::INFO, "VehicleDB", "Vehicle database loaded successfully.");
+    xSemaphoreGive(vehicle_db_mutex);
     return true;
 }
 
 bool vehicle_db_save() {
+    if (xSemaphoreTake(vehicle_db_mutex, portMAX_DELAY) != pdTRUE) return false;
+
     JsonDocument doc;
     JsonArray vehicles = doc.createNestedArray("vehicles");
 
@@ -80,20 +91,100 @@ bool vehicle_db_save() {
     File db_file = LittleFS.open("/vehicles.json", "w");
     if (!db_file) {
         error_report(ErrorLevel::ERROR, "VehicleDB", "Failed to open vehicles.json for writing.");
+        xSemaphoreGive(vehicle_db_mutex);
         return false;
     }
 
     if (serializeJson(doc, db_file) == 0) {
         error_report(ErrorLevel::ERROR, "VehicleDB", "Failed to write to vehicles.json.");
         db_file.close();
+        xSemaphoreGive(vehicle_db_mutex);
         return false;
     }
 
     db_file.close();
     error_report(ErrorLevel::INFO, "VehicleDB", "Vehicle database saved successfully.");
+    xSemaphoreGive(vehicle_db_mutex);
     return true;
 }
 
 const std::vector<VehicleModel>& vehicle_db_get_all_models() {
     return vehicle_database;
+}
+
+bool vehicle_db_set_active_model(const std::string& model_name) {
+    if (xSemaphoreTake(vehicle_db_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) return false;
+    bool found = false;
+    for (const auto& model : vehicle_database) {
+        if (model.model_name == model_name.c_str()) {
+            active_vehicle_model = &model;
+            found = true;
+            break;
+        }
+    }
+    xSemaphoreGive(vehicle_db_mutex);
+    return found;
+}
+
+const VehicleModel* vehicle_db_get_active_model() {
+    // This function doesn't need a mutex because it just returns a pointer.
+    // The caller is responsible for locking the mutex if they dereference the pointer.
+    return active_vehicle_model;
+}
+
+bool vehicle_db_add_model(const VehicleModel& new_model) {
+    if (xSemaphoreTake(vehicle_db_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) return false;
+    // Check if model already exists
+    for (const auto& model : vehicle_database) {
+        if (model.model_name == new_model.model_name) {
+            xSemaphoreGive(vehicle_db_mutex);
+            return false; // Already exists
+        }
+    }
+    vehicle_database.push_back(new_model);
+    xSemaphoreGive(vehicle_db_mutex);
+    return true;
+}
+
+bool vehicle_db_add_ecu_to_model(const std::string& model_name, const VehicleEcu& new_ecu) {
+    if (xSemaphoreTake(vehicle_db_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) return false;
+    bool success = false;
+    for (auto& model : vehicle_database) {
+        if (model.model_name == model_name.c_str()) {
+            // Check if ECU already exists
+            bool ecu_exists = false;
+            for (const auto& ecu : model.ecus) {
+                if (ecu.name == new_ecu.name) {
+                    ecu_exists = true;
+                    break;
+                }
+            }
+            if (!ecu_exists) {
+                model.ecus.push_back(new_ecu);
+                success = true;
+            }
+            break;
+        }
+    }
+    xSemaphoreGive(vehicle_db_mutex);
+    return success;
+}
+
+bool vehicle_db_add_pgn_to_ecu(const std::string& model_name, const std::string& ecu_name, uint32_t pgn) {
+    if (xSemaphoreTake(vehicle_db_mutex, pdMS_TO_TICKS(1000)) != pdTRUE) return false;
+    bool success = false;
+    for (auto& model : vehicle_database) {
+        if (model.model_name == model_name.c_str()) {
+            for (auto& ecu : model.ecus) {
+                if (ecu.name == ecu_name.c_str()) {
+                    ecu.pgns_of_interest.push_back(pgn);
+                    success = true;
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    xSemaphoreGive(vehicle_db_mutex);
+    return success;
 }

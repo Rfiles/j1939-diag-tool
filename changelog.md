@@ -1,5 +1,133 @@
 # Histórico de Alterações do Projeto
 
+### v3.23.0 (2025-10-11)
+- **Diagnóstico Avançado com DM4 (Freeze Frame):**
+  - Implementada a capacidade de pedir e descodificar mensagens DM4 (Freeze Frame).
+  - Adicionado o comando `request_dm4 <address>` à CLI para pedir a uma ECU o "instantâneo" dos dados no momento de uma falha.
+  - O `dm_handler` agora inclui uma implementação inicial para interpretar a estrutura das mensagens DM4.
+
+### v3.22.0 (2025-10-11)
+- **Expansão do Diagnóstico com DM24:**
+  - Implementada a capacidade de pedir e descodificar mensagens DM24 (Supported DTCs).
+  - Adicionado o comando `request_dm24 <address>` à CLI para pedir a uma ECU a lista de todos os DTCs que ela suporta.
+  - A lista de DTCs suportados é agora impressa na consola, enriquecida com as descrições dos SPNs.
+
+### v3.21.0 (2025-10-11)
+- **Finalização da Ferramenta Gráfica (GUI):**
+  - Implementada a lógica completa para upload e download de ficheiros no separador "File Manager" da aplicação `gui_tool.py`.
+  - Adicionado um sistema de estados à GUI para gerir as transferências de ficheiros em segundo plano sem bloquear a interface.
+  - Implementado o separador "Configuration" para ler e escrever configurações do dispositivo diretamente a partir da GUI.
+
+### v3.20.0 (2025-10-11)
+- **Criação de Ferramenta Gráfica (GUI) em Python:**
+  - Desenvolvida uma nova aplicação de desktop (`gui_tool.py`) com `tkinter` para interagir com o dispositivo.
+  - A GUI inclui uma interface com separadores para gestão da ligação série, um terminal, um gestor de ficheiros e um editor de configurações.
+  - Adicionado o comando `get_config` ao firmware para permitir que a GUI leia a configuração atual do dispositivo.
+  - A GUI integra a lógica de listagem, upload e download de ficheiros, e de leitura/escrita de configurações, comunicando através da porta série.
+
+### v3.19.0 (2025-10-11)
+- **Melhoria da Visualização de Dados em Tempo Real:**
+  - A base de dados de SPNs foi significativamente expandida para incluir dezenas de parâmetros comuns.
+  - O `spn_parser` foi atualizado para conseguir descodificar todos estes novos SPNs.
+  - Criado um sistema de mapeamento estruturado entre PGNs e SPNs para uma associação de dados mais correta e escalável.
+  - Os ecrãs de "Live Data" (genérico e por ECU) foram atualizados para usar este novo sistema, mostrando agora uma vasta gama de valores legíveis e formatados, tornando a ferramenta muito mais útil para o diagnóstico em tempo real.
+
+### v3.18.0 (2025-10-11)
+- **Ecrã de Live Data por ECU:**
+  - Implementado um novo ecrã na UI para mostrar dados em tempo real de uma ECU específica, selecionada através da base de dados de veículos.
+  - O comando `read_ecu` foi refatorado para ativar este novo ecrã e passar o contexto da ECU selecionada.
+  - Ao entrar no ecrã, a UI agora envia pedidos para os PGNs de interesse definidos para essa ECU, permitindo uma monitorização focada e contextual.
+
+### v3.17.0 (2025-10-11)
+- **Melhoria na Descodificação de DTCs com Descrições de FMI:**
+  - Criada uma base de dados (`fmi_descriptions.json`) para mapear os códigos FMI (Failure Mode Identifier) para as suas descrições standard J1939.
+  - Adicionado um novo módulo `fmi_db_handler` para carregar e gerir esta base de dados.
+  - O ecrã de visualização de DTCs foi atualizado para mostrar não só a descrição do SPN, mas também a descrição do FMI, tornando o diagnóstico muito mais intuitivo e completo.
+
+### v3.16.0 (2025-10-11)
+- **Visualização de Dados em Tempo Real no Ecrã:**
+  - Criado um novo módulo `spn_parser` para descodificar valores de SPNs específicos (ex: RPM, temperatura) a partir dos seus dados brutos.
+  - O ecrã "Live Data" foi completamente redesenhado para mostrar uma lista de parâmetros J1939 importantes com os seus valores físicos e unidades, em vez de apenas dados CAN brutos.
+  - A interface de utilizador (`ui_handler`) foi refatorada para usar o novo parser e apresentar os dados de forma legível.
+
+### v3.15.0 (2025-10-11)
+- **Visualização de DTCs no Ecrã:**
+  - Criada uma base de dados (`spn_descriptions.json`) para mapear SPNs para descrições legíveis.
+  - O `dm_handler` foi melhorado para enriquecer os dados dos DTCs com as descrições da nova base de dados.
+  - O `ui_handler` foi refatorado para incluir um novo ecrã dedicado à visualização de DTCs.
+  - Os erros de diagnóstico (DM1/DM2) são agora enviados para a tarefa da UI e apresentados no ecrã com a sua descrição, permitindo um diagnóstico visual e em tempo real.
+
+### v3.13.0 (2025-10-11)
+- **Acesso Remoto via Wi-Fi:**
+  - Implementado um servidor Telnet para acesso completo à CLI através da rede (porta 23).
+  - Implementado um servidor HTTP para gestão de ficheiros (porta 80) com os seguintes endpoints:
+    - `GET /files`: Lista os ficheiros no dispositivo.
+    - `GET /download?path=<path>`: Faz o download de um ficheiro.
+    - `POST /upload`: Faz o upload de um ficheiro.
+  - O `comms_handler` foi refatorado para gerir os novos servidores (Telnet e HTTP).
+  - O script `file_manager.py` foi atualizado para suportar tanto a comunicação via Série como via HTTP, permitindo a gestão de ficheiros através da rede.
+
+### v3.12.0 (2025-10-11)
+- **Acesso Remoto à CLI via Telnet:**
+  - Implementado um servidor Telnet que permite o acesso à linha de comandos do dispositivo através da rede Wi-Fi (porta 23).
+  - O sistema de output da CLI foi completamente refatorado para ser agnóstico ao meio de comunicação, permitindo que a resposta dos comandos seja direcionada tanto para a porta Série como para um cliente Telnet.
+  - Todos os logs do sistema e a interação com os comandos estão agora disponíveis remotamente, facilitando o diagnóstico e a gestão do dispositivo sem necessidade de ligação física.
+
+### v3.11.0 (2025-10-11)
+- **Ferramentas Externas e Gestão de Ficheiros:**
+  - Criado um novo script Python, `file_manager.py`, para automatizar o upload e download de ficheiros para o dispositivo através da porta série.
+  - O script interage com os comandos `upload` e `download` da CLI, simplificando a gestão de ficheiros como `vehicles.json` e `config.json`.
+
+### v3.10.0 (2025-10-11)
+- **Transferência de Ficheiros via CLI:**
+  - Implementada a capacidade de fazer upload e download de ficheiros para o sistema de ficheiros LittleFS do dispositivo.
+  - Adicionado o comando `download <filepath>` para obter ficheiros (codificados em Base64).
+  - Adicionado o comando `upload <filepath>` e um "modo de upload" para enviar ficheiros para o dispositivo.
+  - O `cli_handler` foi refatorado para uma máquina de estados (`NORMAL`, `UPLOADING`) para gerir a transferência de ficheiros de forma robusta e com timeout.
+
+### v3.9.0 (2025-10-11)
+- **Edição da Base de Dados de Veículos via CLI:**
+  - O `vehicle_db_handler` foi expandido com funções para modificar a base de dados em memória.
+  - Adicionados novos comandos à CLI para uma gestão completa da base de dados de veículos:
+    - `add_model <name> <type>`: Adiciona um novo modelo de veículo.
+    - `add_ecu <model> <ecu> <addr>`: Adiciona uma nova ECU a um modelo.
+    - `add_pgn <model> <ecu> <pgn>`: Adiciona um PGN de interesse a uma ECU.
+  - As alterações podem ser persistidas no ficheiro `vehicles.json` usando o comando `save_db`.
+
+### v3.8.0 (2025-10-11)
+- **Gestão de Códigos de Erro (DTC):**
+  - Adicionado o comando `clear_dtcs <address>` à CLI para enviar pedidos de limpeza de erros ativos (DM11) e passados (DM3) a uma ECU específica.
+  - O `j1939_handler` foi melhorado para interpretar mensagens de Confirmação (PGN 59392, Acknowledgement).
+  - O sistema agora reporta se um comando (como o de limpar DTCs) foi aceite (ACK Positivo) ou rejeitado (ACK Negativo) pela ECU, fornecendo feedback crucial ao utilizador.
+
+### v3.7.0 (2025-10-11)
+- **Leitura de Dados por Centralina (ECU):**
+  - O `vehicle_db_handler` foi expandido para gerir um "contexto" de veículo ativo.
+  - Adicionado o comando `select_model <modelo>` à CLI para definir o veículo em que se está a trabalhar.
+  - Adicionado o comando `read_ecu <ecu>` à CLI. Este comando consulta a base de dados, encontra a ECU para o modelo de veículo ativo, e pede todos os PGNs de interesse definidos para essa ECU.
+
+### v3.6.0 (2025-10-11)
+- **Descodificação de Mensagens de Diagnóstico (DM1/DM2):**
+  - Criado um novo módulo `dm_handler` para descodificar mensagens de diagnóstico.
+  - Implementada a lógica de parsing para extrair os Códigos de Falha de Diagnóstico (DTCs) de mensagens DM1 (erros ativos) e DM2 (erros passados).
+  - O `pdu_processor` agora utiliza o `dm_handler` para processar e reportar os DTCs recebidos.
+  - Adicionados novos comandos à CLI:
+    - `request_dm1`: Para solicitar os erros ativos.
+    - `request_dm2`: Para solicitar os erros passados.
+
+### v3.5.0 (2025-10-11)
+- **Melhorias de Robustez e Concorrência:**
+  - Adicionado um novo módulo `shared_resources` para gerir "locks" (mutexes) de forma centralizada.
+  - O acesso aos objetos de dados globais (`config` e `vehicle_database`) foi protegido com mutexes para garantir a segurança em ambientes com múltiplas tarefas (thread-safety).
+  - O comando `set` da CLI foi melhorado com tratamento de exceções (`try...catch`) para evitar falhas com inputs numéricos inválidos.
+  - A estrutura do código foi melhorada movendo a lógica de implementação de comandos de desenvolvimento para ficheiros `.cpp`, seguindo as melhores práticas.
+
+### v3.4.0 (2025-10-11)
+- **Refatoração do Gestor de Comunicações (`comms_handler`):**
+  - O `comms_handler` foi completamente reescrito para usar uma máquina de estados robusta, melhorando a gestão do ciclo de vida da ligação.
+  - A nova arquitetura gere os estados de ligação ao Wi-Fi, sincronização NTP e ligação ao MQTT de forma mais resiliente e não-bloqueante.
+  - A lógica de reconexão automática para o Wi-Fi e MQTT está agora integrada na máquina de estados, tornando o sistema mais estável em caso de falhas de rede.
+
 ### v3.3.0 (2025-10-11)
 - **Base de Dados de Veículos e Centralinas:**
   - Implementada a fundação para um sistema de diagnóstico baseado em modelos de veículos.

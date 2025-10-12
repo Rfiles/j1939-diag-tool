@@ -10,6 +10,16 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/queue.h>
 
+// Enum for the state of the Communications Handler state machine
+enum CommsState {
+    COMMS_STATE_STARTING,
+    COMMS_STATE_WIFI_CONNECTING,
+    COMMS_STATE_NTP_SYNCING,
+    COMMS_STATE_MQTT_CONNECTING,
+    COMMS_STATE_OPERATIONAL,
+    COMMS_STATE_WIFI_DISCONNECTED
+};
+
 // --- RTOS Queue ---
 // Queue for high-priority telemetry messages (payloads are heap-allocated strings)
 extern QueueHandle_t telemetry_queue;

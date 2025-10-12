@@ -1,13 +1,28 @@
 /**
  * J1939 Diagnostic Tool - CLI Handler Task Interface
  * 
- * Versão: 2.1.0
+ * Versão: 3.10.0
  */
 
 #ifndef CLI_HANDLER_H
 #define CLI_HANDLER_H
 
+#include <string>
+
+// Enum for the state of the CLI handler
+enum CliState {
+    CLI_STATE_NORMAL,
+    CLI_STATE_UPLOADING
+};
+
 // Initializes and creates the CLI handler task
 void cli_handler_init();
+
+/**
+ * @brief Parses and executes a single command line string.
+ * 
+ * @param command The command line string to execute.
+ */
+void execute_command(char* command);
 
 #endif // CLI_HANDLER_H

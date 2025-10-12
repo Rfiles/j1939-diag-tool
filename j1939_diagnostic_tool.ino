@@ -16,11 +16,21 @@
 #include "src/j1939/tp_handler.h"
 #include "src/j1939/pdu_processor.h"
 #include "src/core/vehicle_db_handler.h"
+#include "src/core/spn_db_handler.h"
+#include "src/core/fmi_db_handler.h"
+#include "src/core/shared_resources.h"
+#include "src/j1939/j1939_pgn_definitions.h"
 
 void setup() {
     // Start serial for debugging
     Serial.begin(115200);
-    Serial.println("\n--- J1939 Diagnostic Tool v3.3.0 ---");
+    Serial.println("\n--- J1939 Diagnostic Tool v3.18.0 ---");
+
+    // Initialize shared resources (mutexes)
+    shared_resources_init();
+
+    // Initialize J1939 definitions
+    init_spn_to_pgn_map();
 
     // Load configuration from LittleFS (defaults)
     if (!filesystem_init()) {
@@ -29,10 +39,15 @@ void setup() {
         while(1);
     }
 
-    // Load the vehicle database
+    // Load databases
     if (!vehicle_db_init()) {
-        // This is not a critical error, we can continue without the DB.
         error_report(ErrorLevel::WARN, "Main", "Could not load vehicle database.");
+    }
+    if (!spn_db_init()) {
+        error_report(ErrorLevel::WARN, "Main", "Could not load SPN database.");
+    }
+    if (!fmi_db_init()) {
+        error_report(ErrorLevel::WARN, "Main", "Could not load FMI database.");
     }
 
     // Initialize NVS and load persistent settings, overriding defaults

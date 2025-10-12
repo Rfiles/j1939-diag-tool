@@ -10,11 +10,16 @@
 #include <LittleFS.h>
 #include <ArduinoJson.h>
 
+#include "shared_resources.h"
+
 // Define the global config instance
 AppConfig config;
 
 bool filesystem_init() {
+    if (xSemaphoreTake(config_mutex, portMAX_DELAY) != pdTRUE) return false;
+
     if (!LittleFS.begin()) {
+        xSemaphoreGive(config_mutex);
         // This error is critical and will be caught in main, which will report it.
         return false;
     }
@@ -22,6 +27,7 @@ bool filesystem_init() {
     File configFile = LittleFS.open("/config.json", "r");
     if (!configFile) {
         error_report(ErrorLevel::CRITICAL, "FileSystem", "Failed to open config.json");
+        xSemaphoreGive(config_mutex);
         return false;
     }
 
@@ -31,6 +37,7 @@ bool filesystem_init() {
         String message = "Failed to parse config.json: ";
         message += error.c_str();
         error_report(ErrorLevel::CRITICAL, "FileSystem", message.c_str());
+        xSemaphoreGive(config_mutex);
         return false;
     }
 
@@ -72,5 +79,7 @@ bool filesystem_init() {
 
     configFile.close();
     error_report(ErrorLevel::INFO, "FileSystem", "Configuration loaded successfully.");
+    
+    xSemaphoreGive(config_mutex);
     return true;
 }

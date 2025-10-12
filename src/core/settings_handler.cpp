@@ -9,6 +9,8 @@
 #include "error_handler.h"
 #include <Preferences.h>
 
+#include "shared_resources.h"
+
 // NVS namespace
 static const char* NVS_NAMESPACE = "j1939_diag";
 
@@ -23,6 +25,7 @@ void settings_init() {
 }
 
 void settings_load() {
+    if (xSemaphoreTake(config_mutex, portMAX_DELAY) != pdTRUE) return;
     error_report(ErrorLevel::INFO, "Settings", "Loading settings from NVS...");
 
     // Read from NVS and update the global config struct.
@@ -41,9 +44,11 @@ void settings_load() {
     config.features.wifi_enabled = preferences.getBool("f_wifi", config.features.wifi_enabled);
     config.features.mqtt_enabled = preferences.getBool("f_mqtt", config.features.mqtt_enabled);
     config.features.gps_enabled = preferences.getBool("f_gps", config.features.gps_enabled);
+    xSemaphoreGive(config_mutex);
 }
 
 void settings_save() {
+    if (xSemaphoreTake(config_mutex, portMAX_DELAY) != pdTRUE) return;
     error_report(ErrorLevel::INFO, "Settings", "Saving settings to NVS...");
 
     // Store the current config values into NVS
@@ -62,6 +67,7 @@ void settings_save() {
     preferences.putBool("f_gps", config.features.gps_enabled);
 
     error_report(ErrorLevel::INFO, "Settings", "Settings saved successfully.");
+    xSemaphoreGive(config_mutex);
 }
 
 void settings_check_version_update() {

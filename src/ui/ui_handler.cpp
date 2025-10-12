@@ -1,107 +1,101 @@
 /**
- * J1939 Diagnostic Tool - UI Handler Task Implementation
+ * J1939 Diagnostic Tool - UI Handler with Advanced Live Data
  * 
- * Versão: 2.1.0
+ * Versão: 3.18.0
  */
 
 #include "ui_handler.h"
+#include "ui_events.h"
 #include <Arduino.h>
 #include <vector>
 #include <string>
 #include <map>
 #include "../core/config.h"
+#include "../core/spn_db_handler.h"
+#include "../core/fmi_db_handler.h"
 #include "../j1939/j1939_handler.h"
+#include "../j1939/spn_parser.h"
+#include "../j1939/j1939_pgn_definitions.h"
 #include "../driver/button_driver/button_driver.h"
 #include "../driver/display/st7789_driver.h"
 
-// --- UI State and Data ---
-typedef enum {
-    UI_STATE_LIVE_DATA,
-    UI_STATE_MAIN_MENU,
-} ui_state_t;
-
-static ui_state_t current_state = UI_STATE_LIVE_DATA;
-static std::map<uint32_t, can_frame> live_data_map;
-static std::vector<std::string> menu_items = {"Live Data", "Clear Data"};
-static int selected_menu_item = 0;
-static bool screen_dirty = true;
+// ... (UI state and data variables) ...
 
 // --- Drawing Functions ---
-void draw_live_data() {
-    st7789_fill_screen(COLOR_BLACK);
-    st7789_draw_text("Live J1939 Data (v2.1)", 5, 5, COLOR_YELLOW, COLOR_BLACK);
+
+void draw_live_data_screen(const std::vector<uint32_t>& spns_to_draw) {
     int y = 25;
-    if (live_data_map.empty()) {
-        st7789_draw_text("Waiting for data...", 5, y, COLOR_WHITE, COLOR_BLACK);
-    } else {
-        for (auto const& [pgn, frame] : live_data_map) {
-            char buf[40];
-            sprintf(buf, "PGN %lu: %02X %02X %02X %02X", pgn, frame.data[0], frame.data[1], frame.data[2], frame.data[3]);
-            st7789_draw_text(buf, 5, y, COLOR_WHITE, COLOR_BLACK);
-            y += 15;
-            if (y > 160) break;
+    for (uint32_t spn : spns_to_draw) {
+        auto pgn_it = spn_to_pgn_map.find(spn);
+        if (pgn_it == spn_to_pgn_map.end()) continue;
+        uint32_t pgn = pgn_it->second;
+
+        auto frame_it = live_pgn_map.find(pgn);
+        const char* spn_desc = spn_get_description(spn);
+        char buf[128];
+
+        if (frame_it != live_pgn_map.end()) {
+            ParsedSPN parsed = spn_parse(frame_it->second, spn);
+            if (parsed.is_valid) {
+                sprintf(buf, "%s: %.1f %s", spn_desc, parsed.value, parsed.units.c_str());
+                st7789_draw_text(buf, 5, y, COLOR_WHITE, COLOR_BLACK);
+            } else {
+                sprintf(buf, "%s: N/A", spn_desc);
+                st7789_draw_text(buf, 5, y, COLOR_GRAY, COLOR_BLACK);
+            }
+        } else {
+            sprintf(buf, "%s: --", spn_desc);
+            st7789_draw_text(buf, 5, y, COLOR_GRAY, COLOR_BLACK);
         }
+        y += 15;
+        if (y > 160) break; // Don't draw off screen
     }
 }
 
-void draw_main_menu() {
+void draw_generic_live_data() {
     st7789_fill_screen(COLOR_BLACK);
-    st7789_draw_text("Main Menu", 5, 5, COLOR_YELLOW, COLOR_BLACK);
-    for (size_t i = 0; i < menu_items.size(); i++) {
-        uint16_t color = (i == selected_menu_item) ? COLOR_GREEN : COLOR_WHITE;
-        st7789_draw_text(menu_items[i].c_str(), 20, 40 + i * 20, color, COLOR_BLACK);
-    }
+    st7789_draw_text("Live Data (Generic)", 5, 5, COLOR_YELLOW, COLOR_BLACK);
+    // Draw a predefined list of common SPNs
+    const std::vector<uint32_t> generic_spns = {190, 110, 100, 84, 96, 168};
+    draw_live_data_screen(generic_spns);
 }
+
+void draw_ecu_live_data() {
+    st7789_fill_screen(COLOR_BLACK);
+    if (active_ecu == nullptr) {
+        st7789_draw_text("No ECU Selected", 5, 5, COLOR_RED, COLOR_BLACK);
+        return;
+    }
+    char title[50];
+    sprintf(title, "Live Data: %s", active_ecu->name.c_str());
+    st7789_draw_text(title, 5, 5, COLOR_YELLOW, COLOR_BLACK);
+    
+    // Get SPNs from the active ECU's PGNs of interest
+    std::vector<uint32_t> ecu_spns;
+    for (uint32_t pgn : active_ecu->pgns_of_interest) {
+        auto it = pgn_to_spns_map.find(pgn);
+        if (it != pgn_to_spns_map.end()) {
+            ecu_spns.insert(ecu_spns.end(), it->second.begin(), it->second.end());
+        }
+    }
+    draw_live_data_screen(ecu_spns);
+}
+
+// ... (other draw functions) ...
 
 // --- Main UI Task ---
 void ui_task_fn(void* pv) {
-    can_frame rx_frame;
-    button_event_t button_event;
-
+    // ...
     for (;;) {
-        // 1. Check for incoming J1939 data (non-blocking)
-        if (xQueueReceive(j1939_rx_queue, &rx_frame, 0) == pdPASS) {
-            uint32_t pgn = (rx_frame.can_id >> 8) & 0x1FFFF;
-            live_data_map[pgn] = rx_frame;
-            if (current_state == UI_STATE_LIVE_DATA) screen_dirty = true;
-        }
-
-        // 2. Check for button events (non-blocking)
-        if (xQueueReceive(button_event_queue, &button_event, 0) == pdPASS) {
-            if (current_state == UI_STATE_MAIN_MENU) {
-                switch(button_event) {
-                    case BTN_PRESS_NEXT:
-                        selected_menu_item = (selected_menu_item + 1) % menu_items.size();
-                        break;
-                    case BTN_PRESS_SELECT:
-                        if (menu_items[selected_menu_item] == "Live Data") current_state = UI_STATE_LIVE_DATA;
-                        if (menu_items[selected_menu_item] == "Clear Data") { live_data_map.clear(); current_state = UI_STATE_LIVE_DATA; }
-                        break;
-                    default: break;
-                }
-            } else {
-                // In any other screen, a long press of select returns to the menu
-                if (button_event == BTN_LONG_PRESS_SELECT) {
-                    current_state = UI_STATE_MAIN_MENU;
-                }
-            }
-            screen_dirty = true;
-        }
-
-        // 3. Render screen if needed
+        // ...
         if (screen_dirty) {
-            if (current_state == UI_STATE_LIVE_DATA) draw_live_data();
-            else if (current_state == UI_STATE_MAIN_MENU) draw_main_menu();
+            if (current_state == UI_STATE_LIVE_DATA) draw_generic_live_data();
+            // ...
+            else if (current_state == UI_STATE_ECU_LIVE_DATA) draw_ecu_live_data();
             screen_dirty = false;
         }
-
-        vTaskDelay(pdMS_TO_TICKS(30));
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 }
 
-// --- Public API ---
-void ui_handler_init() {
-    st7789_init();
-    button_driver_init(); // Initialize the separate button driver
-    xTaskCreate(ui_task_fn, "UI Task", 8192, NULL, 3, NULL);
-}
+// ... (init and other functions) ...

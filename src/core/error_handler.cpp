@@ -9,7 +9,7 @@
 #include <ArduinoJson.h>
 #include "../comms/comms_handler.h"
 #include "../comms/gps/gps_handler.h"
-#include "time_handler.h"
+#include "../cli/cli_output.h"
 
 const char* error_level_to_string(ErrorLevel level) {
     switch (level) {
@@ -24,9 +24,8 @@ const char* error_level_to_string(ErrorLevel level) {
 void error_report(ErrorLevel level, const char* module, const char* message) {
     String timestamp = time_handler_get_timestamp();
 
-    // 1. Print to serial for local debugging
-    String serial_message = timestamp + " [" + error_level_to_string(level) + "] [" + module + "] " + message;
-    Serial.println(serial_message);
+    // 1. Print to the active CLI stream for local debugging
+    cli_printf("%s [%s] [%s] %s\n", timestamp.c_str(), error_level_to_string(level), module, message);
 
     // 2. Create JSON payload for MQTT
     JsonDocument doc;

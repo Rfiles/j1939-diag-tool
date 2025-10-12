@@ -1,10 +1,11 @@
 #include "../cli_command.h"
 #include "../../core/license_handler.h"
+#include "../cli_output.h"
 #include <Arduino.h>
 
 // --- get_hw_id ---
 void get_hw_id_execute(const std::vector<std::string>& args) {
-    Serial.printf("Hardware ID: %s\n", license_get_hw_id().c_str());
+    cli_printf("Hardware ID: %s\n", license_get_hw_id().c_str());
 }
 const CliCommand get_hw_id_command = {
     "get_hw_id",
@@ -14,8 +15,8 @@ const CliCommand get_hw_id_command = {
 
 // --- get_license_info ---
 void get_license_info_execute(const std::vector<std::string>& args) {
-    Serial.printf("Remaining Uses: %d\n", license_get_remaining_uses());
-    Serial.printf("Telemetry Active: %s\n", license_is_feature_active(LicensedFeature::TELEMETRY) ? "Yes" : "No");
+    cli_printf("Remaining Uses: %d\n", license_get_remaining_uses());
+    cli_printf("Telemetry Active: %s\n", license_is_feature_active(LicensedFeature::TELEMETRY) ? "Yes" : "No");
 }
 const CliCommand get_license_info_command = {
     "get_license_info",
@@ -26,7 +27,7 @@ const CliCommand get_license_info_command = {
 // --- activate ---
 void activate_execute(const std::vector<std::string>& args) {
     if (args.size() < 2) {
-        Serial.println("Usage: activate <license_key>");
+        cli_printf("Usage: activate <license_key>\n");
         return;
     }
     license_activate(args[1].c_str());
@@ -43,7 +44,7 @@ const CliCommand activate_command = {
 
 void genkey_execute(const std::vector<std::string>& args) {
     if (args.size() < 3) {
-        Serial.println("Usage: _genkey <uses> <features>");
+        cli_printf("Usage: _genkey <uses> <features>\n");
         return;
     }
     generate_license_key_for_cli(std::stoi(args[1]), std::stoi(args[2]));

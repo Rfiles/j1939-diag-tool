@@ -25,10 +25,31 @@ struct ReassembledPDU {
 // Queue for the TP handler to send fully reassembled PDUs to the application layer
 extern QueueHandle_t j1939_complete_pdu_queue;
 
+// Struct for an outgoing multi-packet message request
+struct OutgoingTPMessage {
+    uint32_t pgn;
+    uint8_t dest_addr;
+    uint8_t data[MAX_TP_MESSAGE_SIZE];
+    uint16_t data_length;
+};
+
+// Queue for sending multi-packet messages
+extern QueueHandle_t j1939_tx_tp_queue;
+
 /**
  * @brief Initializes the Transport Protocol handler.
  */
 void tp_handler_init();
+
+/**
+ * @brief Queues a multi-packet message to be sent via Transport Protocol.
+ * 
+ * @param pgn The PGN of the message to send.
+ * @param dest_addr The destination address.
+ * @param data A pointer to the data payload.
+ * @param length The length of the data payload.
+ */
+void tp_send_message(uint32_t pgn, uint8_t dest_addr, const uint8_t* data, uint16_t length);
 
 /**
  * @brief Processes an incoming CAN frame to check if it's part of a transport protocol session.

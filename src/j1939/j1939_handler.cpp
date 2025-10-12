@@ -12,6 +12,7 @@
 // --- PGNs ---
 #define PGN_ADDRESS_CLAIMED 0xEE00 // 60928
 #define PGN_REQUEST         0xEA00 // 59904
+#define PGN_ACKNOWLEDGEMENT 0xE800 // 59392
 
 // --- RTOS Queues ---
 QueueHandle_t j1939_tx_queue;
@@ -56,6 +57,23 @@ void process_incoming_address_claim(const can_frame* frame) {
         ac_state = AC_STATE_CANNOT_CLAIM;
         current_source_address = 254; // Use NULL address
     }
+}
+
+void process_acknowledgement(const can_frame* frame) {
+    uint8_t control_byte = frame->data[0];
+    uint32_t ack_pgn = frame->data[5] | (frame->data[6] << 8) | (frame->data[7] << 16);
+    uint8_t src_addr = frame->can_id & 0xFF;
+    char msg[100];
+
+    const char* ack_type;
+    switch (control_byte) {
+        case 0: ack_type = "Positive ACK"; break;
+        case 1: ack_type = "Negative ACK"; break;
+        default: ack_type = "Unknown ACK"; break;
+    }
+
+    sprintf(msg, "%s for PGN %lu from address %d", ack_type, ack_pgn, src_addr);
+    error_report(ErrorLevel::INFO, "J1939_ACK", msg);
 }
 
 // --- Task Function ---
@@ -103,6 +121,8 @@ void j1939_task_fn(void* pvParameters) {
 
             if (pgn == PGN_ADDRESS_CLAIMED) {
                 process_incoming_address_claim(&received_frame);
+            } else if (pgn == PGN_ACKNOWLEDGEMENT) {
+                process_acknowledgement(&received_frame);
             } else if (!tp_handler_process_frame(&received_frame)) {
                 xQueueSend(j1939_rx_queue, &received_frame, 0);
             }
