@@ -1,5 +1,10 @@
 # Histórico de Alterações do Projeto
 
+### v3.8.0 (2025-10-13)
+- **Remoção de Dependência Externa:**
+  - Removida a dependência da biblioteca `ESP32Ping`.
+  - Implementada uma função de ping não-bloqueante utilizando a API nativa LwIP do ESP32, reduzindo a dependência de bibliotecas externas.
+
 ### v3.7.0 (2025-10-13)
 - **Ícones de Estado na Barra de Título:**
   - Adicionados ícones de estado na barra de título para fornecer feedback visual sobre a conectividade.
