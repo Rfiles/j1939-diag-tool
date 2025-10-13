@@ -1,6 +1,12 @@
+/**
+ * J1939 Diagnostic Tool - "read_ecu" Command
+ * 
+ * Versão: 3.7.0
+ */
+
 #include "../cli_command.h"
 #include "../../core/vehicle_db_handler.h"
-#include "../../ui/ui_handler.h"
+#include "../../ui/screens/live_data_screen.h"
 #include "../../core/shared_resources.h"
 #include "../cli_output.h"
 #include <Arduino.h>
