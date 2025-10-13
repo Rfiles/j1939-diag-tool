@@ -1,7 +1,13 @@
+/**
+ * J1939 Diagnostic Tool - Live Data Screen
+ * 
+ * Versão: 3.8.0
+ */
+
 #include "live_data_screen.h"
 #include "../ui_manager.h"
-#include "../../j1939/j1939_handler.h"
-#include "../../driver/display/st7789_driver.h"
+#include "../j1939/j1939_handler.h"
+#include "../driver/display/st7789_driver.h"
 
 extern UIManager ui_manager;
 

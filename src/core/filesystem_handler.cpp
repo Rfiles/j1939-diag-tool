@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - Filesystem Handler Implementation
  * 
- * Versão: 2.3.0
+ * Versão: 3.8.0
  */
 
 #include "filesystem_handler.h"

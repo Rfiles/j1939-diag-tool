@@ -1,13 +1,13 @@
 /**
  * J1939 Diagnostic Tool - DM (Diagnostic Message) Handler Implementation
  * 
- * Versão: 3.6.0
+ * Versão: 3.8.0
  */
 
 #include "dm_handler.h"
 #include "../core/error_handler.h"
 #include "../core/spn_db_handler.h"
-#include "../ui/ui_events.h"
+#include "../ui/screens/dtc_screen.h"
 
 // Helper function to parse a single 4-byte DTC from a buffer
 DTC parse_single_dtc(const uint8_t* buffer) {

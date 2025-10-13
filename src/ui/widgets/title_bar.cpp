@@ -1,9 +1,15 @@
+/**
+ * J1939 Diagnostic Tool - Title Bar Widget
+ * 
+ * Versão: 3.8.0
+ */
+
 #include "title_bar.h"
-#include "../../core/time_handler.h"
-#include "../../j1939/j1939_handler.h"
-#include "../../comms/gps/gps_handler.h"
-#include "../../comms/comms_handler.h"
-#include "../../driver/display/st7789_driver.h"
+#include "../core/time_handler.h"
+#include "../j1939/j1939_handler.h"
+#include "../comms/gps/gps_handler.h"
+#include "../comms/comms_handler.h"
+#include "../driver/display/st7789_driver.h"
 #include <Arduino.h>
 
 void TitleBar::draw() {

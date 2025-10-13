@@ -1,8 +1,14 @@
+/**
+ * J1939 Diagnostic Tool - Live Data Screen
+ * 
+ * Versão: 3.8.0
+ */
+
 #ifndef LIVE_DATA_SCREEN_H
 #define LIVE_DATA_SCREEN_H
 
 #include "screen.h"
-#include "../../core/vehicle_db_handler.h"
+#include "../core/vehicle_db_handler.h"
 
 class LiveDataScreen : public Screen {
 public:

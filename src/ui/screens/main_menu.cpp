@@ -1,6 +1,6 @@
 #include "main_menu.h"
 #include "../ui_manager.h"
-#include "../../driver/display/st7789_driver.h"
+#include "../driver/display/st7789_driver.h"
 #include "vehicle_selection_screen.h"
 #include "configuration_screen.h"
 #include "shutdown_screen.h"

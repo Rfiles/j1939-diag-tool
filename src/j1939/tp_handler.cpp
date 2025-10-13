@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - Transport Protocol Handler with TX
  * 
- * Versão: 3.24.0
+ * Versão: 3.8.0
  */
 
 #include "tp_handler.h"

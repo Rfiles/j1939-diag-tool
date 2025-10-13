@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - Time Handler Implementation
  * 
- * Versão: 2.6.0
+ * Versão: 3.8.0
  */
 
 #include <sys/time.h>
