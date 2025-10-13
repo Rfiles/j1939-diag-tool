@@ -10,7 +10,30 @@
 #include "j1939_handler.h"
 #include <Arduino.h>
 
-// ... (PGN defines and TPSession struct)
+// PGNs for Transport Protocol
+#define PGN_TP_CM 0x00EC00
+#define PGN_TP_DT 0x00EB00
+
+// Control bytes for TP.CM
+#define TP_CM_RTS 16
+#define TP_CM_CTS 17
+#define TP_CM_EndOfMsgACK 19
+#define TP_CM_BAM 32
+#define TP_CM_Abort 255
+
+// Represents the state of a single transport protocol session (incoming)
+struct TPSession {
+    bool is_active;
+    bool is_bam;
+    uint32_t pgn;
+    uint16_t total_size;
+    uint8_t total_packets;
+    uint8_t packets_received;
+    uint8_t src_addr;
+    uint8_t dest_addr;
+    uint8_t data[MAX_TP_MESSAGE_SIZE];
+    uint32_t last_activity;
+};
 
 // --- Module State ---
 static TPSession active_sessions[MAX_TP_SESSIONS];
@@ -82,4 +105,85 @@ void tp_send_message(uint32_t pgn, uint8_t dest_addr, const uint8_t* data, uint1
     xQueueSend(j1939_tx_tp_queue, &msg, 0);
 }
 
-// ... (tp_handler_process_frame implementation remains the same) ...
+static TPSession* find_session(uint8_t src_addr, uint8_t dest_addr, uint32_t pgn) {
+    for (int i = 0; i < MAX_TP_SESSIONS; ++i) {
+        if (active_sessions[i].is_active && 
+            active_sessions[i].src_addr == src_addr &&
+            active_sessions[i].dest_addr == dest_addr &&
+            active_sessions[i].pgn == pgn) {
+            return &active_sessions[i];
+        }
+    }
+    return NULL;
+}
+
+bool tp_handler_process_frame(const can_frame* frame) {
+    uint32_t pgn = (frame->can_id >> 8) & 0x1FFFF;
+
+    if (pgn == PGN_TP_CM) {
+        uint8_t control_byte = frame->data[0];
+        uint8_t src_addr = frame->can_id & 0xFF;
+
+        if (control_byte == TP_CM_BAM) {
+            // Find an inactive session
+            TPSession* session = NULL;
+            for (int i = 0; i < MAX_TP_SESSIONS; ++i) {
+                if (!active_sessions[i].is_active) {
+                    session = &active_sessions[i];
+                    break;
+                }
+            }
+
+            if (session) {
+                session->is_active = true;
+                session->is_bam = true;
+                session->src_addr = src_addr;
+                session->dest_addr = 0xFF; // Broadcast
+                session->total_size = (frame->data[2] << 8) | frame->data[1];
+                session->total_packets = frame->data[3];
+                session->pgn = (frame->data[7] << 16) | (frame->data[6] << 8) | frame->data[5];
+                session->packets_received = 0;
+                session->last_activity = millis();
+            }
+            return true; // Frame consumed
+        }
+        // ... (Handle other TP.CM messages like RTS, CTS, etc. here)
+
+    } else if (pgn == PGN_TP_DT) {
+        uint8_t src_addr = frame->can_id & 0xFF;
+        uint8_t seq_num = frame->data[0];
+
+        // Find the session this packet belongs to (BAM sessions are identified by src_addr and dest_addr 0xFF)
+        TPSession* session = find_session(src_addr, 0xFF, 0); // PGN is not known at this point for DTs in a BAM
+        if (!session) {
+             for (int i = 0; i < MAX_TP_SESSIONS; ++i) {
+                if (active_sessions[i].is_active && active_sessions[i].is_bam && active_sessions[i].src_addr == src_addr) {
+                    session = &active_sessions[i];
+                    break;
+                }
+            }
+        }
+
+        if (session && (seq_num == session->packets_received + 1)) {
+            int offset = (seq_num - 1) * 7;
+            int data_len = (session->total_size - offset < 7) ? (session->total_size - offset) : 7;
+            memcpy(&session->data[offset], &frame->data[1], data_len);
+            session->packets_received++;
+            session->last_activity = millis();
+
+            if (session->packets_received == session->total_packets) {
+                // Message fully reassembled
+                ReassembledPDU pdu;
+                pdu.pgn = session->pgn;
+                pdu.src_addr = session->src_addr;
+                pdu.data_length = session->total_size;
+                memcpy(pdu.data, session->data, session->total_size);
+                xQueueSend(j1939_complete_pdu_queue, &pdu, 0);
+                session->is_active = false; // Deactivate session
+            }
+            return true; // Frame consumed
+        }
+    }
+
+    return false; // Frame not part of a TP session
+}

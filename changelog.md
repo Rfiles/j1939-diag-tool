@@ -1,5 +1,25 @@
 # Histórico de Alterações do Projeto
 
+### v3.7.0 (2025-10-13)
+- **Ícones de Estado na Barra de Título:**
+  - Adicionados ícones de estado na barra de título para fornecer feedback visual sobre a conectividade.
+  - **GPS:** Vermelho (sem sinal), Laranja (a procurar satélites), Verde (fixo).
+  - **WiFi:** Vermelho (desligado), Laranja a piscar (a ligar), Laranja fixo (ligado), Verde (com acesso à Internet).
+  - **J1939:** Pisca a verde quando são recebidos dados da rede CAN.
+
+### v3.6.0 (2025-10-13)
+- **Sincronização de Tempo via GPS:**
+  - Adicionada a capacidade de sincronizar la hora del sistema a través de un módulo GPS, como alternativa al NTP.
+  - O `gps_handler` foi atualizado para extrair a data e a hora das sentenças GPRMC.
+  - O `time_handler` foi refatorado para suportar múltiplas fontes de tempo (NTP e GPS).
+  - A aplicação agora tenta sincronizar a hora via GPS se o Wi-Fi não estiver ativado, aumentando a robustez do sistema em campo.
+
+### v3.5.0 (2025-10-12)
+- **Refatoração do Gestor de Comunicações (`comms_handler`):**
+  - O `comms_handler` foi completamente reescrito para usar uma máquina de estados robusta, melhorando a gestão do ciclo de vida da ligação.
+  - A nova arquitetura gere os estados de ligação ao Wi-Fi e ligação ao MQTT de forma mais resiliente e não-bloqueante.
+  - A lógica de reconexão automática para o Wi-Fi e MQTT está agora integrada na máquina de estados, tornando o sistema mais estável em caso de falhas de rede.
+
 ### v3.4.0 (2025-10-12)
 - **Implementação de DM11 e DM13:**
   - Adicionados os comandos `request_dm11` e `request_dm13` à CLI para solicitar as mensagens de diagnóstico DM11 (Memory access) e DM13 (Stop/start broadcast).

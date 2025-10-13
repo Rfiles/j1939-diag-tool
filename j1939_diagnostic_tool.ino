@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - FreeRTOS Entry Point
  * 
- * Versão: 2.2.0
+ * Versão: 2.6.0
  */
 
 #include "src/core/filesystem_handler.h"
@@ -13,6 +13,7 @@
 #include "src/core/error_handler.h"
 #include "src/core/settings_handler.h"
 #include "src/core/license_handler.h"
+#include "src/core/time_handler.h"
 #include "src/j1939/tp_handler.h"
 #include "src/j1939/pdu_processor.h"
 #include "src/core/vehicle_db_handler.h"
@@ -24,7 +25,7 @@
 void setup() {
     // Start serial for debugging
     Serial.begin(115200);
-    Serial.println("\n--- J1939 Diagnostic Tool v3.18.0 ---");
+    Serial.println("\n--- J1939 Diagnostic Tool v2.6.0 ---");
 
     // Initialize shared resources (mutexes)
     shared_resources_init();
@@ -60,6 +61,9 @@ void setup() {
     // Initialize the licensing system
     license_handler_init();
 
+    // Initialize time handler before network services
+    time_handler_init(config.features.wifi_enabled ? TIME_SOURCE_NTP : TIME_SOURCE_GPS);
+
     // Initialize J1939 protocol handlers
     tp_handler_init();
     pdu_processor_init();
@@ -76,6 +80,9 @@ void setup() {
     } else {
         error_report(ErrorLevel::INFO, "Main", "GPS handler disabled by config.");
     }
+
+    // Synchronize time after handlers are initialized
+    time_sync();
 
     // Initialize the core handlers
     j1939_handler_init();

@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - Comms Handler Task Interface
  * 
- * Versão: 2.2.0
+ * Versão: 2.7.0
  */
 
 #ifndef COMMS_HANDLER_H
@@ -14,10 +14,18 @@
 enum CommsState {
     COMMS_STATE_STARTING,
     COMMS_STATE_WIFI_CONNECTING,
-    COMMS_STATE_NTP_SYNCING,
+    COMMS_STATE_INTERNET_CHECK,
     COMMS_STATE_MQTT_CONNECTING,
     COMMS_STATE_OPERATIONAL,
     COMMS_STATE_WIFI_DISCONNECTED
+};
+
+// Enum for the detailed WiFi status
+enum WiFiStatus {
+    WIFI_STATUS_DISCONNECTED,
+    WIFI_STATUS_CONNECTING,
+    WIFI_STATUS_CONNECTED,
+    WIFI_STATUS_INTERNET
 };
 
 // --- RTOS Queue ---
@@ -35,5 +43,12 @@ void comms_handler_init();
  * @return True if the message was successfully sent to the queue.
  */
 bool comms_publish_telemetry(const char* payload);
+
+/**
+ * @brief Gets the current WiFi status.
+ * 
+ * @return The current WiFiStatus.
+ */
+WiFiStatus comms_get_wifi_status();
 
 #endif // COMMS_HANDLER_H

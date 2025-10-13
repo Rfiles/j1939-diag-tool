@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - Comms Handler with HTTP File Server
  * 
- * Versão: 3.13.0
+ * Versão: 2.7.0
  */
 
 #include "comms_handler.h"
@@ -12,14 +12,15 @@
 #include <ArduinoOTA.h>
 #include <WebServer.h>
 #include <LittleFS.h>
+#include <ESP32Ping.h>
 
 #include "../core/config.h"
 #include "../core/error_handler.h"
-// ... other includes
+#include "../core/time_handler.h"
 
 // --- Module State & Clients ---
 static CommsState current_state = COMMS_STATE_STARTING;
-// ... other state variables
+static WiFiStatus wifi_status = WIFI_STATUS_DISCONNECTED;
 WebServer http_server(80);
 File fs_upload_file;
 // ... other clients
@@ -78,30 +79,60 @@ void setup_http_server() {
 
 // --- State Machine Task ---
 void comms_task_fn(void* pv) {
-    // ...
     for (;;) {
         switch (current_state) {
-            // ... other states
+            case COMMS_STATE_STARTING:
+                wifi_status = WIFI_STATUS_CONNECTING;
+                current_state = COMMS_STATE_WIFI_CONNECTING;
+                break;
+
             case COMMS_STATE_WIFI_CONNECTING:
                 if (WiFi.status() == WL_CONNECTED) {
-                    // ... other setup
+                    wifi_status = WIFI_STATUS_CONNECTED;
                     setup_http_server();
-                    current_state = COMMS_STATE_NTP_SYNCING;
-                } // ...
+                    time_sync(); 
+                    current_state = COMMS_STATE_INTERNET_CHECK;
+                } 
+                break;
+
+            case COMMS_STATE_INTERNET_CHECK:
+                if(Ping.ping("google.com")) {
+                    wifi_status = WIFI_STATUS_INTERNET;
+                } else {
+                    wifi_status = WIFI_STATUS_CONNECTED; // Connected but no internet
+                }
+                current_state = COMMS_STATE_MQTT_CONNECTING;
+                break;
+
+            case COMMS_STATE_MQTT_CONNECTING:
+                // ... MQTT connection logic
+                current_state = COMMS_STATE_OPERATIONAL;
                 break;
 
             case COMMS_STATE_OPERATIONAL:
-                // ... other operational logic
                 http_server.handleClient();
                 break;
 
             case COMMS_STATE_WIFI_DISCONNECTED:
+                wifi_status = WIFI_STATUS_DISCONNECTED;
                 http_server.stop();
-                // ... other disconnection logic
+                current_state = COMMS_STATE_STARTING;
                 break;
         }
-        vTaskDelay(pdMS_TO_TICKS(10));
+        vTaskDelay(pdMS_TO_TICKS(100));
     }
 }
 
-// ... (init and other functions) ...
+// --- Public API ---
+void comms_handler_init() {
+    xTaskCreate(comms_task_fn, "Comms Task", 8192, NULL, 5, NULL);
+}
+
+WiFiStatus comms_get_wifi_status() {
+    return wifi_status;
+}
+
+bool comms_publish_telemetry(const char* payload) {
+    // ... (implementation)
+    return false;
+}

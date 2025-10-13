@@ -1,5 +1,5 @@
 /**
- * J1939 Diagnostic Tool - NTP Time Handler Interface
+ * J1939 Diagnostic Tool - Time Handler Interface
  * 
  * Versão: 2.5.0
  */
@@ -9,10 +9,32 @@
 
 #include <Arduino.h>
 
+// Enum to define the source for time synchronization
+enum TimeSource {
+    TIME_SOURCE_NTP,
+    TIME_SOURCE_GPS
+};
+
 /**
- * @brief Initializes the NTP time service. Must be called after WiFi is connected.
+ * @brief Initializes the time service.
+ * 
+ * @param source The initial time source to use (NTP or GPS).
  */
-void time_handler_init();
+void time_handler_init(TimeSource source = TIME_SOURCE_NTP);
+
+/**
+ * @brief Sets the time synchronization source.
+ * 
+ * @param source The time source to use (NTP or GPS).
+ */
+void time_set_source(TimeSource source);
+
+/**
+ * @brief Synchronizes the system time from the configured source.
+ * 
+ * @return True if synchronization was successful, false otherwise.
+ */
+bool time_sync();
 
 /**
  * @brief Gets the current time as a formatted ISO8601 string.

@@ -1,45 +1,65 @@
 /**
- * J1939 Diagnostic Tool - NTP Time Handler Implementation
+ * J1939 Diagnostic Tool - Time Handler Implementation
  * 
- * Versão: 2.5.0
+ * Versão: 2.6.0
  */
 
+#include <sys/time.h>
 #include "time_handler.h"
-#include "time.h"
 #include "error_handler.h"
+#include "../comms/gps/gps_handler.h"
 
 // NTP server settings
 const char* NTP_SERVER = "pool.ntp.org";
-const long GMT_OFFSET_SEC = 0;      // Set your GMT offset in seconds
-const int DAYLIGHT_OFFSET_SEC = 0; // Set your daylight saving offset in seconds
+const long GMT_OFFSET_SEC = 0;
+const int DAYLIGHT_OFFSET_SEC = 0;
 
 static bool time_is_synced = false;
+static TimeSource time_source = TIME_SOURCE_NTP; // Default to NTP
 
-void time_handler_init() {
-    error_report(ErrorLevel::INFO, "Time", "Initializing NTP time synchronization...");
-    // Configure time from NTP server
-    configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER);
+void time_handler_init(TimeSource source) {
+    time_source = source;
+    error_report(ErrorLevel::INFO, "Time", "Time handler initialized.");
+}
 
-    // Give it a moment to sync
-    delay(1000);
+void time_set_source(TimeSource source) {
+    time_source = source;
+    error_report(ErrorLevel::INFO, "Time", "Time source set to %s", source == TIME_SOURCE_NTP ? "NTP" : "GPS");
+}
 
+bool time_sync() {
     struct tm timeinfo;
-    if (getLocalTime(&timeinfo)) {
-        time_is_synced = true;
-        error_report(ErrorLevel::INFO, "Time", "NTP time synchronized successfully.");
-    } else {
-        error_report(ErrorLevel::WARN, "Time", "Failed to synchronize NTP time on first attempt.");
+    bool success = false;
+
+    if (time_source == TIME_SOURCE_NTP) {
+        error_report(ErrorLevel::INFO, "Time", "Synchronizing time from NTP server...");
+        configTime(GMT_OFFSET_SEC, DAYLIGHT_OFFSET_SEC, NTP_SERVER);
+        if (getLocalTime(&timeinfo, 10000)) { // 10-second timeout
+            success = true;
+        }
+    } else if (time_source == TIME_SOURCE_GPS) {
+        error_report(ErrorLevel::INFO, "Time", "Synchronizing time from GPS...");
+        if (gps_get_time(&timeinfo)) {
+            time_t t = mktime(&timeinfo);
+            struct timeval tv = { .tv_sec = t };
+            settimeofday(&tv, NULL);
+            success = true;
+        }
     }
+
+    if (success) {
+        time_is_synced = true;
+        error_report(ErrorLevel::INFO, "Time", "Time synchronized successfully.");
+    } else {
+        error_report(ErrorLevel::WARN, "Time", "Failed to synchronize time.");
+    }
+
+    return success;
 }
 
 String time_handler_get_timestamp() {
     if (!time_is_synced) {
-        struct tm timeinfo;
-        if (getLocalTime(&timeinfo, 100)) { // 100ms timeout
-            time_is_synced = true; // Mark as synced on first success
-        } else {
-            return "[TIME NOT SYNCED]";
-        }
+        return "[TIME NOT SYNCED]";
     }
 
     char buffer[30];
