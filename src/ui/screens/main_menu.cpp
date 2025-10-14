@@ -1,8 +1,8 @@
 #include "main_menu.h"
-#include "../driver/button_driver/button_driver.h"
+#include "../../driver/button_driver/button_driver.h"
 #include <Arduino.h>
 #include "../ui_manager.h"
-#include "../driver/display/st7789_driver.h"
+#include "../../driver/display/st7789_driver.h"
 #include "vehicle_selection_screen.h"
 #include "configuration_screen.h"
 #include "shutdown_screen.h"

@@ -12,7 +12,6 @@
 #include <ArduinoOTA.h>
 #include <WebServer.h>
 #include <LittleFS.h>
-#include <ESP32Ping.h>
 #include "lwip/inet_chksum.h"
 #include "lwip/raw.h"
 #include "lwip/prot/ip.h"
@@ -80,6 +79,75 @@ void setup_http_server() {
     error_report(ErrorLevel::INFO, "HTTP", "HTTP File Server started.");
 }
 
+// --- Custom Ping Function using LwIP ---
+bool ping_host(const char* host) {
+    ip_addr_t target_addr;
+    if (!ipaddr_aton(host, &target_addr)) {
+        // If DNS resolution is needed
+        if (netconn_gethostbyname(host, &target_addr) != ERR_OK) {
+            error_report(ErrorLevel::WARNING, "PING", "Failed to resolve host");
+            return false;
+        }
+    }
+
+    int sock = lwip_socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
+    if (sock < 0) {
+        error_report(ErrorLevel::WARNING, "PING", "Failed to create raw socket");
+        return false;
+    }
+
+    struct timeval timeout;
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+    lwip_setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+
+    struct icmp_echo_hdr *iecho;
+    char packet[sizeof(struct icmp_echo_hdr) + 32];
+    iecho = (struct icmp_echo_hdr *)packet;
+    ICMPH_TYPE_SET(iecho, ICMP_ECHO);
+    ICMPH_CODE_SET(iecho, 0);
+    iecho->chksum = 0;
+    iecho->id = 0xABCD;
+    iecho->seqno = htons(1);
+
+    // Fill with some data
+    for (int i = sizeof(struct icmp_echo_hdr); i < sizeof(packet); i++) {
+        packet[i] = i;
+    }
+
+    iecho->chksum = inet_chksum(packet, sizeof(packet));
+
+    struct sockaddr_in dest_addr;
+    dest_addr.sin_family = AF_INET;
+    dest_addr.sin_addr.s_addr = target_addr.u_addr.ip4.addr;
+    dest_addr.sin_len = sizeof(dest_addr);
+
+    if (lwip_sendto(sock, packet, sizeof(packet), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr)) < 0) {
+        error_report(ErrorLevel::WARNING, "PING", "Failed to send ICMP packet");
+        lwip_close(sock);
+        return false;
+    }
+
+    char rx_buffer[64];
+    struct sockaddr_in from_addr;
+    int from_len = sizeof(from_addr);
+
+    int len = lwip_recvfrom(sock, rx_buffer, sizeof(rx_buffer), 0, (struct sockaddr *)&from_addr, (socklen_t*)&from_len);
+    lwip_close(sock);
+
+    if (len > 0) {
+        struct ip_hdr *iphdr = (struct ip_hdr *)rx_buffer;
+        struct icmp_echo_hdr *icmp_reply = (struct icmp_echo_hdr *)(rx_buffer + (IPH_HL(iphdr) * 4));
+        if (ICMPH_TYPE(icmp_reply) == ICMP_ER) {
+            error_report(ErrorLevel::INFO, "PING", "Ping successful");
+            return true;
+        }
+    }
+    
+    error_report(ErrorLevel::WARNING, "PING", "Ping failed");
+    return false;
+}
+
 // --- State Machine Task ---
 void comms_task_fn(void* pv) {
     for (;;) {
@@ -99,7 +167,7 @@ void comms_task_fn(void* pv) {
                 break;
 
             case COMMS_STATE_MQTT_CONNECTING:
-                if(Ping.ping("google.com")) {
+                if(ping_host("google.com")) {
                     wifi_status = WIFI_STATUS_INTERNET;
                 } else {
                     wifi_status = WIFI_STATUS_CONNECTED; // Connected but no internet

@@ -1,6 +1,6 @@
 #include "../cli_command.h"
-#include "../core/config.h"
-#include "../core/shared_resources.h"
+#include "../../core/config.h"
+#include "../../core/shared_resources.h"
 #include "../cli_output.h"
 #include <Arduino.h>
 #include <stdexcept>
