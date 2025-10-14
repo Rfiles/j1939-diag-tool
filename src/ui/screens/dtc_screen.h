@@ -8,7 +8,7 @@
 #define DTC_SCREEN_H
 
 #include "screen.h"
-#include "../j1939/dm_handler.h"
+#include "../../j1939/dm_handler.h"
 #include <vector>
 
 extern QueueHandle_t dtc_queue;
