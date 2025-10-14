@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <ctime>
 #include <mbedtls/base64.h>
-#include <mbedtls/sha256.h>
+
 #include <mbedtls/md.h>
 
 // This file contains the logic for the hidden developer commands to generate and activate licenses.
@@ -34,15 +34,20 @@ void pack_data_for_gen(const LicenseData& data, uint8_t* buffer) {
 }
 
 uint32_t generate_truncated_signature_for_gen(const char* hw_id, uint16_t uses, uint8_t features, uint16_t issue_date) {
-    mbedtls_sha256_context ctx;
+    mbedtls_md_context_t ctx;
+    mbedtls_md_type_t md_type = MBEDTLS_MD_SHA256;
     unsigned char data_to_sign[100];
     unsigned char full_signature[32];
+
     snprintf((char*)data_to_sign, sizeof(data_to_sign), "%s:%d:%d:%d", hw_id, uses, features, issue_date);
-    mbedtls_sha256_init(&ctx);
-    if (mbedtls_sha256_hmac_starts(&ctx, (const unsigned char*)"A_DIFFERENT_SECRET_KEY_FOR_V2.7_LICENSES", 39, 0) != 0) return 0;
-    if (mbedtls_sha256_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
-    if (mbedtls_sha256_hmac_finish(&ctx, full_signature) != 0) return 0;
-    mbedtls_sha256_free(&ctx);
+
+    mbedtls_md_init(&ctx);
+    if (mbedtls_md_setup(&ctx, mbedtls_md_info_from_type(md_type), 1) != 0) return 0;
+    if (mbedtls_md_hmac_starts(&ctx, (const unsigned char*)"A_DIFFERENT_SECRET_KEY_FOR_V2.7_LICENSES", 39) != 0) return 0;
+    if (mbedtls_md_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
+    if (mbedtls_md_hmac_finish(&ctx, full_signature) != 0) return 0;
+    mbedtls_md_free(&ctx);
+
     return (full_signature[0] << 13) | (full_signature[1] << 5) | (full_signature[2] >> 3);
 }
 
