@@ -84,12 +84,20 @@ void setup_http_server() {
 // --- Custom Ping Function using LwIP ---
 bool ping_host(const char* host) {
     ip_addr_t target_addr;
+    struct hostent *he;
     if (!ipaddr_aton(host, &target_addr)) {
         // If DNS resolution is needed
-        if (netconn_gethostbyname(host, &target_addr) != ERR_OK) {
+        he = lwip_gethostbyname(host);
+        if (he == NULL) {
             error_report(ErrorLevel::WARN, "PING", "Failed to resolve host");
             return false;
         }
+        struct in_addr **addr_list = (struct in_addr **)he->h_addr_list;
+        if (addr_list[0] == NULL) {
+            error_report(ErrorLevel::WARN, "PING", "No IP address found for host");
+            return false;
+        }
+        target_addr.u_addr.ip4.addr = addr_list[0]->s_addr;
     }
 
     int sock = lwip_socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
