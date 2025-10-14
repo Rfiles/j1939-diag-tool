@@ -12,6 +12,8 @@
 #include <ArduinoOTA.h>
 #include <WebServer.h>
 #include <LittleFS.h>
+#include "lwip/sockets.h"
+#include "lwip/netdb.h"
 #include "lwip/inet_chksum.h"
 #include "lwip/raw.h"
 #include "lwip/prot/ip.h"
@@ -85,14 +87,14 @@ bool ping_host(const char* host) {
     if (!ipaddr_aton(host, &target_addr)) {
         // If DNS resolution is needed
         if (netconn_gethostbyname(host, &target_addr) != ERR_OK) {
-            error_report(ErrorLevel::WARNING, "PING", "Failed to resolve host");
+            error_report(ErrorLevel::WARN, "PING", "Failed to resolve host");
             return false;
         }
     }
 
     int sock = lwip_socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
     if (sock < 0) {
-        error_report(ErrorLevel::WARNING, "PING", "Failed to create raw socket");
+        error_report(ErrorLevel::WARN, "PING", "Failed to create raw socket");
         return false;
     }
 
@@ -123,7 +125,7 @@ bool ping_host(const char* host) {
     dest_addr.sin_len = sizeof(dest_addr);
 
     if (lwip_sendto(sock, packet, sizeof(packet), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr)) < 0) {
-        error_report(ErrorLevel::WARNING, "PING", "Failed to send ICMP packet");
+        error_report(ErrorLevel::WARN, "PING", "Failed to send ICMP packet");
         lwip_close(sock);
         return false;
     }
@@ -144,7 +146,7 @@ bool ping_host(const char* host) {
         }
     }
     
-    error_report(ErrorLevel::WARNING, "PING", "Ping failed");
+    error_report(ErrorLevel::WARN, "PING", "Ping failed");
     return false;
 }
 

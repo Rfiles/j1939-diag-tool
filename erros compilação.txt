@@ -1,62 +1,100 @@
 
 "C:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esp-x32\\2507/bin/xtensa-esp32s3-elf-g++" -MMD -c "@C:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esp32-arduino-libs\\idf-release_v5.5-07e9bf49-v1\\esp32s3/flags/cpp_flags" -w -Os -Werror=return-type -DF_CPU=240000000L -DARDUINO=10607 -DARDUINO_ESP32S3_DEV -DARDUINO_ARCH_ESP32 "-DARDUINO_BOARD=\"ESP32S3_DEV\"" "-DARDUINO_VARIANT=\"esp32s3\"" -DARDUINO_PARTITION_default "-DARDUINO_HOST_OS=\"windows\"" "-DARDUINO_FQBN=\"esp32:esp32:esp32s3:UploadSpeed=921600,USBMode=hwcdc,CDCOnBoot=default,MSCOnBoot=default,DFUOnBoot=default,UploadMode=default,CPUFreq=240,FlashMode=qio,FlashSize=4M,PartitionScheme=default,DebugLevel=none,PSRAM=disabled,LoopCore=1,EventsCore=1,EraseFlash=none,JTAGAdapter=default,ZigbeeMode=default\"" -DESP32=ESP32 -DCORE_DEBUG_LEVEL=0 -DARDUINO_RUNNING_CORE=1 -DARDUINO_EVENT_RUNNING_CORE=1 -DARDUINO_USB_MODE=1 -DARDUINO_USB_CDC_ON_BOOT=0 -DARDUINO_USB_MSC_ON_BOOT=0 -DARDUINO_USB_DFU_ON_BOOT=0 "@C:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esp32-arduino-libs\\idf-release_v5.5-07e9bf49-v1\\esp32s3/flags/defines" "-IH:\\Downloads\\j1939-diag-tool" -iprefix "C:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esp32-arduino-libs\\idf-release_v5.5-07e9bf49-v1\\esp32s3/include/" "@C:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esp32-arduino-libs\\idf-release_v5.5-07e9bf49-v1\\esp32s3/flags/includes" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\tools\\esp32-arduino-libs\\idf-release_v5.5-07e9bf49-v1\\esp32s3/qio_qspi/include" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\cores\\esp32" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\variants\\esp32s3" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\LittleFS\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\FS\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\WiFi\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\Network\\src" "-Ic:\\Users\\Reis\\Documents\\Arduino\\libraries\\PubSubClient\\src" "-Ic:\\Users\\Reis\\Documents\\Arduino\\libraries\\ArduinoJson\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\ESPmDNS\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\ArduinoOTA\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\Update\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\WebServer\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\Preferences\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\SPI\\src" "-IC:\\Users\\Reis\\AppData\\Local\\Arduino15\\packages\\esp32\\hardware\\esp32\\3.3.2\\libraries\\Hash\\src" "@C:\\Users\\Reis\\AppData\\Local\\arduino\\sketches\\C5E2968049F6657C3177F7653CAFB2D7/build_opt.h" "@C:\\Users\\Reis\\AppData\\Local\\arduino\\sketches\\C5E2968049F6657C3177F7653CAFB2D7/file_opts" "C:\\Users\\Reis\\AppData\\Local\\arduino\\sketches\\C5E2968049F6657C3177F7653CAFB2D7\\sketch\\src\\ui\\widgets\\title_bar.cpp" -o "C:\\Users\\Reis\\AppData\\Local\\arduino\\sketches\\C5E2968049F6657C3177F7653CAFB2D7\\sketch\\src\\ui\\widgets\\title_bar.cpp.o"
 H:\Downloads\j1939-diag-tool\src\cli\commands\dev_license_generator.cpp: In function 'uint32_t generate_truncated_signature_for_gen(const char*, uint16_t, uint8_t, uint16_t)':
-H:\Downloads\j1939-diag-tool\src\cli\commands\dev_license_generator.cpp:41:9: error: 'mbedtls_sha256_hmac_starts' was not declared in this scope; did you mean 'mbedtls_sha256_starts'?
-   41 |     if (mbedtls_sha256_hmac_starts(&ctx, (const unsigned char*)"A_DIFFERENT_SECRET_KEY_FOR_V2.7_LICENSES", 39, 0) != 0) return 0;
+H:\Downloads\j1939-diag-tool\src\cli\commands\dev_license_generator.cpp:42:9: error: 'mbedtls_sha256_hmac_starts' was not declared in this scope; did you mean 'mbedtls_sha256_starts'?
+   42 |     if (mbedtls_sha256_hmac_starts(&ctx, (const unsigned char*)"A_DIFFERENT_SECRET_KEY_FOR_V2.7_LICENSES", 39, 0) != 0) return 0;
       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
       |         mbedtls_sha256_starts
-H:\Downloads\j1939-diag-tool\src\cli\commands\dev_license_generator.cpp:42:9: error: 'mbedtls_sha256_hmac_update' was not declared in this scope; did you mean 'mbedtls_sha256_update'?
-   42 |     if (mbedtls_sha256_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
+H:\Downloads\j1939-diag-tool\src\cli\commands\dev_license_generator.cpp:43:9: error: 'mbedtls_sha256_hmac_update' was not declared in this scope; did you mean 'mbedtls_sha256_update'?
+   43 |     if (mbedtls_sha256_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
       |         mbedtls_sha256_update
-H:\Downloads\j1939-diag-tool\src\cli\commands\dev_license_generator.cpp:43:9: error: 'mbedtls_sha256_hmac_finish' was not declared in this scope; did you mean 'mbedtls_sha256_finish'?
-   43 |     if (mbedtls_sha256_hmac_finish(&ctx, full_signature) != 0) return 0;
+H:\Downloads\j1939-diag-tool\src\cli\commands\dev_license_generator.cpp:44:9: error: 'mbedtls_sha256_hmac_finish' was not declared in this scope; did you mean 'mbedtls_sha256_finish'?
+   44 |     if (mbedtls_sha256_hmac_finish(&ctx, full_signature) != 0) return 0;
       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
       |         mbedtls_sha256_finish
-H:\Downloads\j1939-diag-tool\src\ui\screens\live_data_screen.cpp: In member function 'virtual void LiveDataScreen::on_enter()':
-H:\Downloads\j1939-diag-tool\src\ui\screens\live_data_screen.cpp:24:9: error: 'j1939_request_pgn' was not declared in this scope
-   24 |         j1939_request_pgn(pgn, ecu->source_address);
-      |         ^~~~~~~~~~~~~~~~~
-H:\Downloads\j1939-diag-tool\src\ui\screens\live_data_screen.cpp: In member function 'virtual void LiveDataScreen::handle_input()':
-H:\Downloads\j1939-diag-tool\src\ui\screens\live_data_screen.cpp:33:22: error: 'BTN_PRESS_BACK' was not declared in this scope; did you mean 'BTN_PRESS_NEXT'?
-   33 |         if (event == BTN_PRESS_BACK) {
-      |                      ^~~~~~~~~~~~~~
-      |                      BTN_PRESS_NEXT
-H:\Downloads\j1939-diag-tool\src\ui\screens\dtc_screen.cpp: In member function 'virtual void DtcScreen::handle_input()':
-H:\Downloads\j1939-diag-tool\src\ui\screens\dtc_screen.cpp:31:22: error: 'BTN_PRESS_BACK' was not declared in this scope; did you mean 'BTN_PRESS_NEXT'?
-   31 |         if (event == BTN_PRESS_BACK) {
-      |                      ^~~~~~~~~~~~~~
-      |                      BTN_PRESS_NEXT
 H:\Downloads\j1939-diag-tool\src\core\license_handler.cpp: In function 'uint32_t generate_truncated_signature(const char*, uint16_t, uint8_t, uint16_t)':
-H:\Downloads\j1939-diag-tool\src\core\license_handler.cpp:92:9: error: 'mbedtls_sha256_hmac_starts' was not declared in this scope; did you mean 'mbedtls_sha256_starts'?
-   92 |     if (mbedtls_sha256_hmac_starts(&ctx, (const unsigned char*)HMAC_SECRET_KEY, strlen(HMAC_SECRET_KEY), 0) != 0) return 0;
+H:\Downloads\j1939-diag-tool\src\core\license_handler.cpp:93:9: error: 'mbedtls_sha256_hmac_starts' was not declared in this scope; did you mean 'mbedtls_sha256_starts'?
+   93 |     if (mbedtls_sha256_hmac_starts(&ctx, (const unsigned char*)HMAC_SECRET_KEY, strlen(HMAC_SECRET_KEY), 0) != 0) return 0;
       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
       |         mbedtls_sha256_starts
-H:\Downloads\j1939-diag-tool\src\core\license_handler.cpp:93:9: error: 'mbedtls_sha256_hmac_update' was not declared in this scope; did you mean 'mbedtls_sha256_update'?
-   93 |     if (mbedtls_sha256_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
+H:\Downloads\j1939-diag-tool\src\core\license_handler.cpp:94:9: error: 'mbedtls_sha256_hmac_update' was not declared in this scope; did you mean 'mbedtls_sha256_update'?
+   94 |     if (mbedtls_sha256_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
       |         mbedtls_sha256_update
-H:\Downloads\j1939-diag-tool\src\core\license_handler.cpp:94:9: error: 'mbedtls_sha256_hmac_finish' was not declared in this scope; did you mean 'mbedtls_sha256_finish'?
-   94 |     if (mbedtls_sha256_hmac_finish(&ctx, full_signature) != 0) return 0;
+H:\Downloads\j1939-diag-tool\src\core\license_handler.cpp:95:9: error: 'mbedtls_sha256_hmac_finish' was not declared in this scope; did you mean 'mbedtls_sha256_finish'?
+   95 |     if (mbedtls_sha256_hmac_finish(&ctx, full_signature) != 0) return 0;
       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~
       |         mbedtls_sha256_finish
-H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp: In function 'void comms_task_fn(void*)':
-H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:102:20: error: 'Ping' was not declared in this scope
-  102 |                 if(Ping.ping("google.com")) {
-      |                    ^~~~
-Using library LittleFS at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\LittleFS 
-Using library FS at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\FS 
-Using library WiFi at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\WiFi 
-Using library Networking at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\Network 
-Using library PubSubClient at version 2.8 in folder: C:\Users\Reis\Documents\Arduino\libraries\PubSubClient 
-Using library ArduinoJson at version 7.4.2 in folder: C:\Users\Reis\Documents\Arduino\libraries\ArduinoJson 
-Using library ESPmDNS at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\ESPmDNS 
-Using library ArduinoOTA at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\ArduinoOTA 
-Using library Update at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\Update 
-Using library WebServer at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\WebServer 
-Using library Preferences at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\Preferences 
-Using library SPI at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\SPI 
-Using library Hash at version 3.3.2 in folder: C:\Users\Reis\AppData\Local\Arduino15\packages\esp32\hardware\esp32\3.3.2\libraries\Hash 
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp: In function 'bool ping_host(const char*)':
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:87:13: error: 'netconn_gethostbyname' was not declared in this scope; did you mean 'netif_get_hostname'?
+   87 |         if (netconn_gethostbyname(host, &target_addr) != ERR_OK) {
+      |             ^~~~~~~~~~~~~~~~~~~~~
+      |             netif_get_hostname
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:88:38: error: 'WARNING' is not a member of 'ErrorLevel'; did you mean 'WARN'?
+   88 |             error_report(ErrorLevel::WARNING, "PING", "Failed to resolve host");
+      |                                      ^~~~~~~
+      |                                      WARN
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:93:28: error: 'AF_INET' was not declared in this scope
+   93 |     int sock = lwip_socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
+      |                            ^~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:93:37: error: 'SOCK_RAW' was not declared in this scope
+   93 |     int sock = lwip_socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
+      |                                     ^~~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:93:16: error: 'lwip_socket' was not declared in this scope; did you mean 'lwip_sock'?
+   93 |     int sock = lwip_socket(AF_INET, SOCK_RAW, IP_PROTO_ICMP);
+      |                ^~~~~~~~~~~
+      |                lwip_sock
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:95:34: error: 'WARNING' is not a member of 'ErrorLevel'; did you mean 'WARN'?
+   95 |         error_report(ErrorLevel::WARNING, "PING", "Failed to create raw socket");
+      |                                  ^~~~~~~
+      |                                  WARN
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:102:27: error: 'SOL_SOCKET' was not declared in this scope; did you mean 'ESP_SOCKET'?
+  102 |     lwip_setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+      |                           ^~~~~~~~~~
+      |                           ESP_SOCKET
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:102:39: error: 'SO_RCVTIMEO' was not declared in this scope
+  102 |     lwip_setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+      |                                       ^~~~~~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:102:5: error: 'lwip_setsockopt' was not declared in this scope
+  102 |     lwip_setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+      |     ^~~~~~~~~~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:120:24: error: aggregate 'ping_host(const char*)::sockaddr_in dest_addr' has incomplete type and cannot be defined
+  120 |     struct sockaddr_in dest_addr;
+      |                        ^~~~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:125:9: error: 'lwip_sendto' was not declared in this scope
+  125 |     if (lwip_sendto(sock, packet, sizeof(packet), 0, (struct sockaddr *)&dest_addr, sizeof(dest_addr)) < 0) {
+      |         ^~~~~~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:126:34: error: 'WARNING' is not a member of 'ErrorLevel'; did you mean 'WARN'?
+  126 |         error_report(ErrorLevel::WARNING, "PING", "Failed to send ICMP packet");
+      |                                  ^~~~~~~
+      |                                  WARN
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:127:9: error: 'lwip_close' was not declared in this scope; did you mean 'pclose'?
+  127 |         lwip_close(sock);
+      |         ^~~~~~~~~~
+      |         pclose
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:132:24: error: aggregate 'ping_host(const char*)::sockaddr_in from_addr' has incomplete type and cannot be defined
+  132 |     struct sockaddr_in from_addr;
+      |                        ^~~~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:135:100: error: 'socklen_t' was not declared in this scope; did you mean 'locale_t'?
+  135 |     int len = lwip_recvfrom(sock, rx_buffer, sizeof(rx_buffer), 0, (struct sockaddr *)&from_addr, (socklen_t*)&from_len);
+      |                                                                                                    ^~~~~~~~~
+      |                                                                                                    locale_t
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:135:110: error: expected primary-expression before ')' token
+  135 |     int len = lwip_recvfrom(sock, rx_buffer, sizeof(rx_buffer), 0, (struct sockaddr *)&from_addr, (socklen_t*)&from_len);
+      |                                                                                                              ^
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:135:15: error: 'lwip_recvfrom' was not declared in this scope
+  135 |     int len = lwip_recvfrom(sock, rx_buffer, sizeof(rx_buffer), 0, (struct sockaddr *)&from_addr, (socklen_t*)&from_len);
+      |               ^~~~~~~~~~~~~
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:136:5: error: 'lwip_close' was not declared in this scope; did you mean 'pclose'?
+  136 |     lwip_close(sock);
+      |     ^~~~~~~~~~
+      |     pclose
+H:\Downloads\j1939-diag-tool\src\comms\comms_handler.cpp:147:30: error: 'WARNING' is not a member of 'ErrorLevel'; did you mean 'WARN'?
+  147 |     error_report(ErrorLevel::WARNING, "PING", "Ping failed");
+      |                              ^~~~~~~
+      |                              WARN
+
 exit status 1
 
 Compilation error: 'mbedtls_sha256_hmac_starts' was not declared in this scope; did you mean 'mbedtls_sha256_starts'?
