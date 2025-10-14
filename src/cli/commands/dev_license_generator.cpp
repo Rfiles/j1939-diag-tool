@@ -6,6 +6,7 @@
 #include <ctime>
 #include <mbedtls/base64.h>
 #include <mbedtls/sha256.h>
+#include <mbedtls/md.h>
 
 // This file contains the logic for the hidden developer commands to generate and activate licenses.
 // It is separated to keep the command definition files clean.

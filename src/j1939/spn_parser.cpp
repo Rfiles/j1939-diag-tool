@@ -94,3 +94,4 @@ ParsedSPN spn_parse(const can_frame& frame, uint32_t spn) {
     }
 
     return result;
+}

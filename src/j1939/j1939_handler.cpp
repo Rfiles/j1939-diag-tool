@@ -147,6 +147,13 @@ void j1939_task_fn(void* pvParameters) {
     }
 }
 
+void j1939_request_pgn(uint32_t pgn, uint8_t dest_address) {
+    J1939TxRequest request;
+    request.pgn = pgn;
+    request.dest_address = dest_address;
+    xQueueSend(j1939_tx_queue, &request, 0);
+}
+
 // --- Public API ---
 
 void j1939_handler_init() {

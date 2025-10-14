@@ -30,7 +30,7 @@ void LiveDataScreen::on_exit() {}
 void LiveDataScreen::handle_input() {
     button_event_t event;
     if (xQueueReceive(button_event_queue, &event, 0) == pdPASS) {
-        if (event == BTN_PRESS_BACK) {
+        if (event == BTN_PRESS_SELECT) {
             ui_manager.pop_screen();
         }
     }

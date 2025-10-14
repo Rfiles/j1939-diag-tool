@@ -11,6 +11,7 @@
 #include <WiFi.h>
 #include <mbedtls/sha256.h>
 #include <mbedtls/base64.h>
+#include <mbedtls/md.h>
 
 // --- Security Warning ---
 static const char* HMAC_SECRET_KEY = "A_DIFFERENT_SECRET_KEY_FOR_V2.7_LICENSES";

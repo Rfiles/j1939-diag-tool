@@ -34,6 +34,9 @@ extern QueueHandle_t j1939_rx_queue;
 // Initializes the J1939 handler and creates the task
 void j1939_handler_init();
 
+void j1939_request_pgn(uint32_t pgn, uint8_t dest_address);
+
+
 /**
  * @brief Gets the current, claimed J1939 source address of this device.
  * 

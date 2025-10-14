@@ -23,9 +23,12 @@ Para garantir a robustez e modularidade, o projeto segue padrões de desenvolvim
   - **Configurações do Utilizador:** Dados sensíveis ou específicos (como senhas de Wi-Fi) são definidos via CLI e guardados na **NVS (Non-Volatile Storage)**, para não serem expostos no código-fonte.
 - **Abstração de Hardware:** Os drivers para componentes específicos (ex: transceiver CAN MCP2515, ecrã ST7789) estão isolados na sua própria camada (`src/driver`), facilitando a adaptação a outro hardware.
 
+Arduino esp32 core framework 3.3.2
 Utilizar vector e map para programação de funções quando aplicavel.
 Ser menos verboso nas respostas. Explica so se solicitado.
 actualiza a versão do header caso o firmware seja atualizado. A versão será a actual do projecto.
+Actualiza o changelog apos cada atualização continuando desde a versão anterior.
+
 
 ## 3. Funcionalidades Implementadas
 
