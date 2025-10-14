@@ -23,6 +23,27 @@
 #include "src/core/shared_resources.h"
 #include "src/j1939/j1939_pgn_definitions.h"
 
+// Force include of CLI command definitions
+#include "src/cli/commands/cli_commands.cpp"
+#include "src/cli/commands/db_edit_commands.cpp"
+#include "src/cli/commands/dev_license_generator.cpp"
+#include "src/cli/commands/dm_clear_commands.cpp"
+#include "src/cli/commands/dm_commands.cpp"
+#include "src/cli/commands/file_transfer_commands.cpp"
+#include "src/cli/commands/get_config_command.cpp"
+#include "src/cli/commands/help_command.cpp"
+#include "src/cli/commands/license_commands.cpp"
+#include "src/cli/commands/ls_command.cpp"
+#include "src/cli/commands/read_ecu_command.cpp"
+#include "src/cli/commands/request_command.cpp"
+#include "src/cli/commands/request_vin_command.cpp"
+#include "src/cli/commands/save_command.cpp"
+#include "src/cli/commands/select_model_command.cpp"
+#include "src/cli/commands/set_command.cpp"
+#include "src/cli/commands/stream_command.cpp"
+#include "src/cli/commands/vehicle_db_commands.cpp"
+
+
 void setup() {
     // Start serial for debugging
     Serial.begin(115200);
