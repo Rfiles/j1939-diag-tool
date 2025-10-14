@@ -24,7 +24,9 @@ void time_handler_init(TimeSource source) {
 
 void time_set_source(TimeSource source) {
     time_source = source;
-    error_report(ErrorLevel::INFO, "Time", "Time source set to %s", source == TIME_SOURCE_NTP ? "NTP" : "GPS");
+    char msg[50];
+    sprintf(msg, "Time source set to %s", source == TIME_SOURCE_NTP ? "NTP" : "GPS");
+    error_report(ErrorLevel::INFO, "Time", msg);
 }
 
 bool time_sync() {

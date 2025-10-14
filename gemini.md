@@ -25,6 +25,7 @@ Para garantir a robustez e modularidade, o projeto segue padrões de desenvolvim
 
 Utilizar vector e map para programação de funções quando aplicavel.
 Ser menos verboso nas respostas. Explica so se solicitado.
+actualiza a versão do header caso o firmware seja atualizado. A versão será a actual do projecto.
 
 ## 3. Funcionalidades Implementadas
 

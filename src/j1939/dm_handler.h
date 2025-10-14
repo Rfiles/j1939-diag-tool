@@ -9,6 +9,8 @@
 
 #include <Arduino.h>
 
+#include <map>
+
 // Represents a single J1939 Diagnostic Trouble Code (DTC)
 struct DTC {
     uint32_t spn; // Suspect Parameter Number (19 bits)

@@ -1,8 +1,9 @@
 #include "../cli_command.h"
-#include "../../core/config.h"
-#include "../../core/shared_resources.h"
+#include "../core/config.h"
+#include "../core/shared_resources.h"
 #include "../cli_output.h"
 #include <Arduino.h>
+#include <stdexcept>
 
 // Helper to parse boolean values
 bool string_to_bool(const std::string& s) {

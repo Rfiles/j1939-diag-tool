@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - CLI Handler (Serial and Telnet)
  * 
- * Versão: 3.12.0
+ * Versão: 3.8.0
  */
 
 #include "cli_handler.h"

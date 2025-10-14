@@ -1,3 +1,9 @@
+/**
+ * J1939 Diagnostic Tool - UI Manager
+ * 
+ * Versão: 3.8.0
+ */
+
 #ifndef UI_MANAGER_H
 #define UI_MANAGER_H
 
@@ -16,5 +22,7 @@ public:
 private:
     std::vector<std::shared_ptr<Screen>> screen_stack;
 };
+
+void ui_manager_init();
 
 #endif // UI_MANAGER_H

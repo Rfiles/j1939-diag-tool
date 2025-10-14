@@ -1,5 +1,11 @@
 #include "dev_license_generator.h"
 #include "../../core/settings_handler.h"
+#include "../../core/license_handler.h"
+#include <Arduino.h>
+#include <cstdint>
+#include <ctime>
+#include <mbedtls/base64.h>
+#include <mbedtls/sha256.h>
 
 // This file contains the logic for the hidden developer commands to generate and activate licenses.
 // It is separated to keep the command definition files clean.
@@ -32,9 +38,9 @@ uint32_t generate_truncated_signature_for_gen(const char* hw_id, uint16_t uses, 
     unsigned char full_signature[32];
     snprintf((char*)data_to_sign, sizeof(data_to_sign), "%s:%d:%d:%d", hw_id, uses, features, issue_date);
     mbedtls_sha256_init(&ctx);
-    mbedtls_sha256_hmac_starts_ret(&ctx, (const unsigned char*)"A_DIFFERENT_SECRET_KEY_FOR_V2.7_LICENSES", 39, 0);
-    mbedtls_sha256_hmac_update_ret(&ctx, data_to_sign, strlen((char*)data_to_sign));
-    mbedtls_sha256_hmac_finish_ret(&ctx, full_signature);
+    if (mbedtls_sha256_hmac_starts(&ctx, (const unsigned char*)"A_DIFFERENT_SECRET_KEY_FOR_V2.7_LICENSES", 39, 0) != 0) return 0;
+    if (mbedtls_sha256_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
+    if (mbedtls_sha256_hmac_finish(&ctx, full_signature) != 0) return 0;
     mbedtls_sha256_free(&ctx);
     return (full_signature[0] << 13) | (full_signature[1] << 5) | (full_signature[2] >> 3);
 }

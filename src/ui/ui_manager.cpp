@@ -1,3 +1,9 @@
+/**
+ * J1939 Diagnostic Tool - UI Manager
+ * 
+ * Versão: 3.8.0
+ */
+
 #include "ui_manager.h"
 #include <Arduino.h>
 #include "screens/splash_screen.h"

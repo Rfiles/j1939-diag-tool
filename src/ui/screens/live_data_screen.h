@@ -12,7 +12,7 @@
 
 class LiveDataScreen : public Screen {
 public:
-    LiveDataScreen(const Ecu* ecu);
+    LiveDataScreen(const VehicleEcu* ecu);
 
     void on_enter() override;
     void on_exit() override;
@@ -21,9 +21,9 @@ public:
     void draw() override;
 
 private:
-    const Ecu* ecu;
+    const VehicleEcu* ecu;
 };
 
-void ui_show_ecu_data(const Ecu* ecu);
+void ui_show_ecu_data(const VehicleEcu* ecu);
 
 #endif // LIVE_DATA_SCREEN_H

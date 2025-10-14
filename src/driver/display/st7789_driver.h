@@ -16,6 +16,7 @@
 #define COLOR_GREEN       0x07E0
 #define COLOR_BLUE        0x001F
 #define COLOR_YELLOW      0xFFE0
+#define COLOR_ORANGE      0xFDA0
 
 // Initialize the display
 void st7789_init();

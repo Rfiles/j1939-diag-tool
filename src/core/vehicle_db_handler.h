@@ -1,13 +1,14 @@
 /**
  * J1939 Diagnostic Tool - Vehicle Database Handler Interface
  * 
- * Versão: 3.3.0
+ * Versão: 3.8.0
  */
 
 #ifndef VEHICLE_DB_HANDLER_H
 #define VEHICLE_DB_HANDLER_H
 
 #include <Arduino.h>
+#include <string>
 #include <vector>
 
 // Represents a single ECU in a vehicle model

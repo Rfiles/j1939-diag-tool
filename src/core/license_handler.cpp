@@ -89,9 +89,9 @@ uint32_t generate_truncated_signature(const char* hw_id, uint16_t uses, uint8_t 
     snprintf((char*)data_to_sign, sizeof(data_to_sign), "%s:%d:%d:%d", hw_id, uses, features, issue_date);
 
     mbedtls_sha256_init(&ctx);
-    mbedtls_sha256_hmac_starts_ret(&ctx, (const unsigned char*)HMAC_SECRET_KEY, strlen(HMAC_SECRET_KEY), 0);
-    mbedtls_sha256_hmac_update_ret(&ctx, data_to_sign, strlen((char*)data_to_sign));
-    mbedtls_sha256_hmac_finish_ret(&ctx, full_signature);
+    if (mbedtls_sha256_hmac_starts(&ctx, (const unsigned char*)HMAC_SECRET_KEY, strlen(HMAC_SECRET_KEY), 0) != 0) return 0;
+    if (mbedtls_sha256_hmac_update(&ctx, data_to_sign, strlen((char*)data_to_sign)) != 0) return 0;
+    if (mbedtls_sha256_hmac_finish(&ctx, full_signature) != 0) return 0;
     mbedtls_sha256_free(&ctx);
 
     // Truncate the signature to 21 bits (return as uint32_t)

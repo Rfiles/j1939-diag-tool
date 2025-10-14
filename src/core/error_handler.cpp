@@ -1,10 +1,11 @@
 /**
  * J1939 Diagnostic Tool - Centralized Error Handler Implementation
  * 
- * Versão: 2.3.0
+ * Versão: 3.8.0
  */
 
 #include "error_handler.h"
+#include "time_handler.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include "../comms/comms_handler.h"

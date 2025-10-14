@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - CLI Handler Task Interface
  * 
- * Versão: 3.10.0
+ * Versão: 3.8.0
  */
 
 #ifndef CLI_HANDLER_H
@@ -24,5 +24,12 @@ void cli_handler_init();
  * @param command The command line string to execute.
  */
 void execute_command(char* command);
+
+/**
+ * @brief Enters the file upload mode.
+ * 
+ * @param filepath The path of the file to upload.
+ */
+void cli_enter_upload_mode(const std::string& filepath);
 
 #endif // CLI_HANDLER_H

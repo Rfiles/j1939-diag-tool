@@ -6,6 +6,7 @@
 
 class MainMenuScreen : public Screen {
 public:
+    MainMenuScreen();
     void on_enter() override;
     void on_exit() override;
 

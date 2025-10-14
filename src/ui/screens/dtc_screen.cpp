@@ -5,6 +5,7 @@
  */
 
 #include "dtc_screen.h"
+#include "../driver/button_driver/button_driver.h"
 #include "../ui_manager.h"
 #include "../driver/display/st7789_driver.h"
 #include "../core/spn_db_handler.h"

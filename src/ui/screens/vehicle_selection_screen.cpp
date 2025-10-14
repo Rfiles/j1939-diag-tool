@@ -1,4 +1,5 @@
 #include "vehicle_selection_screen.h"
+#include "../../driver/button_driver/button_driver.h"
 #include "../ui_manager.h"
 #include "../../core/vehicle_db_handler.h"
 #include "../../driver/display/st7789_driver.h"
