@@ -36,11 +36,11 @@ void load_default_config() {
     config.display.mosi_pin = 6;
     config.display.cs_pin = 38;
     config.display.dc_pin = 39;
-    config.display.rst_pin = 45;
-    config.display.bl_pin = 46;
-
-    config.mcp2515.spi_host = 3;
-    config.mcp2515.sclk_pin = 12;
+        config.display.rst_pin = 45;
+        config.display.bl_pin = 46;
+        config.display.display_brightness = 255;
+        
+        config.mcp2515.spi_host = 3;    config.mcp2515.sclk_pin = 12;
     config.mcp2515.mosi_pin = 11;
     config.mcp2515.miso_pin = 13;
     config.mcp2515.cs_pin = 10;
@@ -99,10 +99,11 @@ bool filesystem_init() {
     config.display.mosi_pin = doc["display"]["mosi_pin"] | 6;
     config.display.cs_pin = doc["display"]["cs_pin"] | 38;
     config.display.dc_pin = doc["display"]["dc_pin"] | 39;
-    config.display.rst_pin = doc["display"]["rst_pin"] | 45;
-    config.display.bl_pin = doc["display"]["bl_pin"] | 46;
-
-    config.mcp2515.spi_host = doc["mcp2515"]["spi_host"] | 3;
+        config.display.rst_pin = doc["display"]["rst_pin"] | 45;
+        config.display.bl_pin = doc["display"]["bl_pin"] | 46;
+        config.display.display_brightness = doc["display"]["display_brightness"] | 255;
+    
+        config.mcp2515.spi_host = doc["mcp2515"]["spi_host"] | 3;
     config.mcp2515.sclk_pin = doc["mcp2515"]["sclk_pin"] | 12;
     config.mcp2515.mosi_pin = doc["mcp2515"]["mosi_pin"] | 11;
     config.mcp2515.miso_pin = doc["mcp2515"]["miso_pin"] | 13;
@@ -118,6 +119,75 @@ bool filesystem_init() {
     configFile.close();
     error_report(ErrorLevel::INFO, "FileSystem", "Configuration loaded successfully.");
     
-    xSemaphoreGive(config_mutex);
+bool save_default_config() {
+    // Create a default config file
+    File configFile = LittleFS.open("/config.json", "w");
+    if (!configFile) {
+        error_report(ErrorLevel::CRITICAL, "FileSystem", "Failed to create config.json.");
+        return false;
+    }
+
+    JsonDocument doc;
+    doc["j1939_node_address"] = 128;
+    doc["j1939_name"] = "0x8012345678ABCD00";
+    doc["wifi"]["ssid"] = "";
+    doc["wifi"]["password"] = "";
+    doc["mqtt"]["broker"] = "";
+    doc["mqtt"]["port"] = 1883;
+    doc["mqtt"]["topic"] = "j1939/diag_tool/data";
+    doc["buttons"]["select_pin"] = 0;
+    doc["buttons"]["next_pin"] = 14;
+    doc["display"]["spi_host"] = 2;
+    doc["display"]["sclk_pin"] = 7;
+    doc["display"]["mosi_pin"] = 6;
+    doc["display"]["cs_pin"] = 38;
+    doc["display"]["dc_pin"] = 39;
+    doc["display"]["rst_pin"] = 45;
+    doc["display"]["bl_pin"] = 46;
+    doc["display"]["display_brightness"] = 255;
+    doc["mcp2515"]["spi_host"] = 3;
+    doc["mcp2515"]["sclk_pin"] = 12;
+    doc["mcp2515"]["mosi_pin"] = 11;
+    doc["mcp2515"]["miso_pin"] = 13;
+    doc["mcp2515"]["cs_pin"] = 10;
+    doc["ota"]["hostname"] = "j1939-diag-tool";
+    doc["ota"]["password"] = "";
+    doc["features"]["wifi_enabled"] = false;
+    doc["features"]["mqtt_enabled"] = false;
+    doc["features"]["gps_enabled"] = false;
+
+    if (serializeJson(doc, configFile) == 0) {
+        error_report(ErrorLevel::CRITICAL, "FileSystem", "Failed to write to config.json.");
+        configFile.close();
+        return false;
+    }
+
+    configFile.close();
+    error_report(ErrorLevel::INFO, "FileSystem", "Default configuration saved.");
     return true;
 }
+
+bool filesystem_format_and_create_defaults() {
+    error_report(ErrorLevel::WARN, "FileSystem", "Formatting filesystem and creating default files.");
+
+    if (!LittleFS.format()) {
+        error_report(ErrorLevel::CRITICAL, "FileSystem", "Filesystem format failed.");
+        return false;
+    }
+
+    // Re-mount the filesystem after formatting
+    if (!LittleFS.begin()) {
+        error_report(ErrorLevel::CRITICAL, "FileSystem", "Failed to mount filesystem after format.");
+        return false;
+    }
+
+    if (!save_default_config()) {
+        return false;
+    }
+
+    // You can add creation of other default files here if needed
+
+    error_report(ErrorLevel::INFO, "FileSystem", "Filesystem formatted and default files created successfully.");
+    return true;
+}
+

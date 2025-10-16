@@ -36,6 +36,7 @@ struct AppConfig {
         int dc_pin;
         int rst_pin;
         int bl_pin;
+        uint8_t display_brightness;
     } display;
     struct {
         int spi_host;

@@ -3,7 +3,8 @@
  * 
  * Versão: 3.5.0
  */
-
+#include <Arduino.h>
+#include <HardwareSerial.h>
 #include "shared_resources.h"
 
 // Define the mutex handles

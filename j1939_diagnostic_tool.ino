@@ -43,6 +43,9 @@
 #include "src/cli/commands/stream_command.cpp"
 #include "src/cli/commands/vehicle_db_commands.cpp"
 
+#include "src/ui/screens/error_screen.h"
+#include "src/ui/screens/main_menu.h"
+
 
 void setup() {
     // Start serial for debugging
@@ -52,14 +55,30 @@ void setup() {
     // Initialize shared resources (mutexes)
     shared_resources_init();
 
+    // Initialize the UI as early as possible to show the splash screen
+    ui_manager_init();
+
     // Initialize J1939 definitions
     init_spn_to_pgn_map();
 
-    // Load configuration from LittleFS (defaults)
+    // Load configuration from LittleFS
     if (!filesystem_init()) {
-        // We can't use the full error_report here as comms aren't up yet.
-        Serial.println("CRITICAL: Filesystem or config error. Halting.");
-        while(1);
+        error_report(ErrorLevel::CRITICAL, "Main", "Filesystem error, attempting to recover.");
+        
+        // Attempt to format and create a default filesystem
+        if (filesystem_format_and_create_defaults()) {
+            // Show a message to the user and wait for confirmation
+            ui_manager.push_screen(std::make_shared<ErrorScreen>("FS Error", "FS created. Press SELECT"));
+            // The UI task will handle the rest. We just need to wait here.
+            // The ErrorScreen will pop itself when the user presses SELECT.
+        } else {
+            // If we can't even create a new filesystem, we're stuck.
+            // A more robust solution might try to display a persistent error on the screen.
+            Serial.println("CRITICAL: Filesystem recovery failed. Halting.");
+            // You could draw a critical error message directly to the screen here
+            // and then halt.
+            while(1);
+        }
     }
 
     // Load databases
@@ -108,10 +127,12 @@ void setup() {
 
     // Initialize the core handlers
     j1939_handler_init();
-    ui_manager_init();
     cli_handler_init();
 
     error_report(ErrorLevel::INFO, "Main", "All tasks created. Scheduler is running.");
+
+    // After splash screen, normal operation proceeds to the main menu.
+    // The splash screen itself transitions to the main menu after a delay.
 }
 
 void loop() {

@@ -52,16 +52,26 @@ void set_addr_window(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1) {
     write_command(0x2C); // Memory Write
 }
 
+#include <Arduino.h>
+
+// LEDC channels for PWM backlight control
+#define LEDC_CHANNEL_0 0
+#define LEDC_TIMER_8_BIT 8
+#define LEDC_BASE_FREQ 5000
+
 // --- Public API Implementation ---
 
 void st7789_init() {
     pinMode(config.display.cs_pin, OUTPUT);
     pinMode(config.display.dc_pin, OUTPUT);
     pinMode(config.display.rst_pin, OUTPUT);
-    pinMode(config.display.bl_pin, OUTPUT);
+
+    // Setup PWM for backlight
+    ledcSetup(LEDC_CHANNEL_0, LEDC_BASE_FREQ, LEDC_TIMER_8_BIT);
+    ledcAttachPin(config.display.bl_pin, LEDC_CHANNEL_0);
 
     digitalWrite(config.display.cs_pin, HIGH);
-    digitalWrite(config.display.bl_pin, HIGH); // Turn on backlight
+    st7789_set_brightness(config.display.display_brightness);
 
     // Reset the display
     digitalWrite(config.display.rst_pin, HIGH);
@@ -84,6 +94,10 @@ void st7789_init() {
 
     write_command(0x29); // Display ON
     delay(120);
+}
+
+void st7789_set_brightness(uint8_t value) {
+    ledcWrite(LEDC_CHANNEL_0, value);
 }
 
 void st7789_fill_screen(uint16_t color) {

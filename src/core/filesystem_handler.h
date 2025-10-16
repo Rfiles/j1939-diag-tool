@@ -11,4 +11,9 @@
 // Returns true on success, false on failure.
 bool filesystem_init();
 
+
+// Formats the filesystem and creates default files.
+// Returns true on success, false on failure.
+bool filesystem_format_and_create_defaults();
+
 #endif // FILESYSTEM_HANDLER_H

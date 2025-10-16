@@ -12,7 +12,7 @@ not #!/bin/bash
 
 # --- CONFIGURAÇÃO ---
 GITHUB_REPO_URL="https://github.com/Rfiles/j1939-diag-tool.git"
-COMMIT_MESSAGE="v1.0.0: Estrutura inicial do projeto e implementação J1939"
+COMMIT_MESSAGE="Actualização do código"
 
 # --- SCRIPT ---
 

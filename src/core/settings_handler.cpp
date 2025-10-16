@@ -41,9 +41,9 @@ void settings_load() {
     config.ota.hostname = preferences.getString("ota_host", config.ota.hostname);
     config.ota.password = preferences.getString("ota_pass", config.ota.password);
 
-    config.features.wifi_enabled = preferences.getBool("f_wifi", config.features.wifi_enabled);
     config.features.mqtt_enabled = preferences.getBool("f_mqtt", config.features.mqtt_enabled);
     config.features.gps_enabled = preferences.getBool("f_gps", config.features.gps_enabled);
+    config.display.display_brightness = preferences.getUChar("d_bright", config.display.display_brightness);
     xSemaphoreGive(config_mutex);
 }
 
@@ -62,9 +62,9 @@ void settings_save() {
     preferences.putString("ota_host", config.ota.hostname);
     preferences.putString("ota_pass", config.ota.password);
 
-    preferences.putBool("f_wifi", config.features.wifi_enabled);
     preferences.putBool("f_mqtt", config.features.mqtt_enabled);
     preferences.putBool("f_gps", config.features.gps_enabled);
+    preferences.putUChar("d_bright", config.display.display_brightness);
 
     error_report(ErrorLevel::INFO, "Settings", "Settings saved successfully.");
     xSemaphoreGive(config_mutex);

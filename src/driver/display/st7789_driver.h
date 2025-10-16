@@ -32,4 +32,7 @@ void st7789_draw_text(const char* text, int16_t x, int16_t y, uint16_t color, ui
 void st7789_fill_rect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 
 
+// Set the display brightness (0-255)
+void st7789_set_brightness(uint8_t value);
+
 #endif // ST7789_DRIVER_H
