@@ -9,7 +9,7 @@
 #include "screens/splash_screen.h"
 #include "../driver/display/st7789_driver.h"
 
-static UIManager ui_manager;
+UIManager ui_manager;
 
 void ui_manager_task_fn(void* pv) {
     ui_manager.run();

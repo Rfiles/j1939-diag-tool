@@ -39,7 +39,8 @@ void error_report(ErrorLevel level, const char* module, const char* message) {
     // 3. Get GPS data and add to payload
     GpsData gps_data;
     if (gps_get_last_data(&gps_data)) {
-        JsonObject gps = doc.createNestedObject("gps");
+        // Use recommended API: obtain a JsonObject reference via to<>()
+        JsonObject gps = doc["gps"].to<JsonObject>();
         gps["lat"] = gps_data.latitude;
         gps["lon"] = gps_data.longitude;
     }

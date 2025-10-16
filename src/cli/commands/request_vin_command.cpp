@@ -16,7 +16,7 @@ void request_vin_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand request_vin_command = {
+extern const CliCommand request_vin_command = {
     "request_vin",
     "Request the Vehicle Identification Number (VIN)",
     request_vin_execute

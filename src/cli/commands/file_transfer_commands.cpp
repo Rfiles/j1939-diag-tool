@@ -42,7 +42,7 @@ void download_execute(const std::vector<std::string>& args) {
     cli_printf("\nFILE_END\n");
 }
 
-const CliCommand download_command = {
+extern const CliCommand download_command = {
     "download",
     "Download a file from the device (Base64)",
     download_execute
@@ -57,7 +57,7 @@ void upload_execute(const std::vector<std::string>& args) {
     cli_enter_upload_mode(args[1]);
 }
 
-const CliCommand upload_command = {
+extern const CliCommand upload_command = {
     "upload",
     "Upload a file to the device (Base64)",
     upload_execute

@@ -25,7 +25,7 @@ void get_config_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand get_config_command = {
+extern const CliCommand get_config_command = {
     "get_config",
     "Print the current device configuration",
     get_config_execute

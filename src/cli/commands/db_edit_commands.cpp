@@ -19,7 +19,7 @@ void add_model_execute(const std::vector<std::string>& args) {
         Serial.println("Error: Model with that name already exists.");
     }
 }
-const CliCommand add_model_command = {
+extern const CliCommand add_model_command = {
     "add_model",
     "Add a new vehicle model to the database",
     add_model_execute
@@ -41,7 +41,7 @@ void add_ecu_execute(const std::vector<std::string>& args) {
         Serial.println("Error: Model not found or ECU already exists in model.");
     }
 }
-const CliCommand add_ecu_command = {
+extern const CliCommand add_ecu_command = {
     "add_ecu",
     "Add an ECU to a vehicle model",
     add_ecu_execute
@@ -61,7 +61,7 @@ void add_pgn_execute(const std::vector<std::string>& args) {
         Serial.println("Error: Model or ECU not found.");
     }
 }
-const CliCommand add_pgn_command = {
+extern const CliCommand add_pgn_command = {
     "add_pgn",
     "Add a PGN of interest to an ECU",
     add_pgn_execute

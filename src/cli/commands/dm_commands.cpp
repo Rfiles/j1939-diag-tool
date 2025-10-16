@@ -15,7 +15,7 @@ void request_dm1_execute(const std::vector<std::string>& args) {
         cli_printf("DM1 request sent.\n");
     }
 }
-const CliCommand request_dm1_command = {
+extern const CliCommand request_dm1_command = {
     "request_dm1",
     "Request active diagnostic trouble codes (DM1)",
     request_dm1_execute
@@ -30,7 +30,7 @@ void request_dm2_execute(const std::vector<std::string>& args) {
         cli_printf("DM2 request sent.\n");
     }
 }
-const CliCommand request_dm2_command = {
+extern const CliCommand request_dm2_command = {
     "request_dm2",
     "Request previously active DTCs (DM2)",
     request_dm2_execute
@@ -51,7 +51,7 @@ void request_dm24_execute(const std::vector<std::string>& args) {
         cli_printf("DM24 request sent to address %d.\n", dest_address);
     }
 }
-const CliCommand request_dm24_command = {
+extern const CliCommand request_dm24_command = {
     "request_dm24",
     "Request supported DTCs from an ECU (DM24)",
     request_dm24_execute
@@ -72,7 +72,7 @@ void request_dm4_execute(const std::vector<std::string>& args) {
         cli_printf("DM4 request sent to address %d.\n", dest_address);
     }
 }
-const CliCommand request_dm4_command = {
+extern const CliCommand request_dm4_command = {
     "request_dm4",
     "Request freeze frame data from an ECU (DM4)",
     request_dm4_execute
@@ -93,7 +93,7 @@ void request_dm25_execute(const std::vector<std::string>& args) {
         cli_printf("DM25 request sent to address %d.\n", dest_address);
     }
 }
-const CliCommand request_dm25_command = {
+extern const CliCommand request_dm25_command = {
     "request_dm25",
     "Request expanded freeze frame from an ECU (DM25)",
     request_dm25_execute
@@ -114,7 +114,7 @@ void request_dm11_execute(const std::vector<std::string>& args) {
         cli_printf("DM11 request sent to address %d.\n", dest_address);
     }
 }
-const CliCommand request_dm11_command = {
+extern const CliCommand request_dm11_command = {
     "request_dm11",
     "Request memory access (DM11)",
     request_dm11_execute
@@ -130,7 +130,7 @@ void request_dm13_execute(const std::vector<std::string>& args) {
         cli_printf("DM13 request sent.\n");
     }
 }
-const CliCommand request_dm13_command = {
+extern const CliCommand request_dm13_command = {
     "request_dm13",
     "Request stop/start broadcast (DM13)",
     request_dm13_execute

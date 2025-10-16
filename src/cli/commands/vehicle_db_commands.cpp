@@ -21,7 +21,7 @@ void list_models_execute(const std::vector<std::string>& args) {
     }
     xSemaphoreGive(vehicle_db_mutex);
 }
-const CliCommand list_models_command = {
+extern const CliCommand list_models_command = {
     "list_models",
     "List all vehicle models in the database",
     list_models_execute
@@ -61,7 +61,7 @@ void show_model_execute(const std::vector<std::string>& args) {
     }
     xSemaphoreGive(vehicle_db_mutex);
 }
-const CliCommand show_model_command = {
+extern const CliCommand show_model_command = {
     "show_model",
     "Show details of a specific vehicle model",
     show_model_execute
@@ -71,7 +71,7 @@ const CliCommand show_model_command = {
 void save_db_execute(const std::vector<std::string>& args) {
     vehicle_db_save();
 }
-const CliCommand save_db_command = {
+extern const CliCommand save_db_command = {
     "save_db",
     "Save any changes to the vehicle database file",
     save_db_execute

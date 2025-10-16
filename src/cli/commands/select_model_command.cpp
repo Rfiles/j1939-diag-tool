@@ -16,7 +16,7 @@ void select_model_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand select_model_command = {
+extern const CliCommand select_model_command = {
     "select_model",
     "Set the active vehicle model for context-specific commands",
     select_model_execute

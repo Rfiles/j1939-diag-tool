@@ -19,7 +19,7 @@ void request_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand request_command = {
+extern const CliCommand request_command = {
     "request",
     "Request a specific PGN from the bus",
     request_execute

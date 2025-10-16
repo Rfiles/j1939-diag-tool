@@ -7,7 +7,7 @@ void save_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand save_command = {
+extern const CliCommand save_command = {
     "save",
     "Save all current settings to persistent storage",
     save_execute

@@ -32,7 +32,7 @@ void request_stream_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand request_stream_command = {
+extern const CliCommand request_stream_command = {
     "request_stream",
     "Request a data stream of specific SPNs from an ECU (DM21)",
     request_stream_execute

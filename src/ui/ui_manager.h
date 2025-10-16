@@ -25,4 +25,7 @@ private:
 
 void ui_manager_init();
 
+// Global UI manager instance (defined in ui_manager.cpp)
+extern UIManager ui_manager;
+
 #endif // UI_MANAGER_H

@@ -7,7 +7,7 @@ void help_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand help_command = {
+extern const CliCommand help_command = {
     "help",
     "Shows this help message",
     help_execute

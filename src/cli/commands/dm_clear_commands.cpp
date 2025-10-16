@@ -37,7 +37,7 @@ void clear_dtcs_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand clear_dtcs_command = {
+extern const CliCommand clear_dtcs_command = {
     "clear_dtcs",
     "Clear active (DM1) and previously active (DM2) DTCs from an ECU",
     clear_dtcs_execute

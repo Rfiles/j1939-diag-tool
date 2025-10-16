@@ -70,18 +70,18 @@ bool vehicle_db_save() {
     if (xSemaphoreTake(vehicle_db_mutex, portMAX_DELAY) != pdTRUE) return false;
 
     JsonDocument doc;
-    JsonArray vehicles = doc.createNestedArray("vehicles");
-
+    // Build the JSON array for vehicles
+    JsonArray vehicles = doc["vehicles"].to<JsonArray>();
     for (const auto& model : vehicle_database) {
-        JsonObject vehicle_json = vehicles.createNestedObject();
+        JsonObject vehicle_json = vehicles.add<JsonObject>();
         vehicle_json["model_name"] = model.model_name;
         vehicle_json["type"] = model.type;
-        JsonArray ecus_json = vehicle_json.createNestedArray("ecus");
+        JsonArray ecus_json = vehicle_json["ecus"].to<JsonArray>();
         for (const auto& ecu : model.ecus) {
-            JsonObject ecu_json = ecus_json.createNestedObject();
+            JsonObject ecu_json = ecus_json.add<JsonObject>();
             ecu_json["name"] = ecu.name;
             ecu_json["sa"] = ecu.source_address;
-            JsonArray pgns_json = ecu_json.createNestedArray("pgns_of_interest");
+            JsonArray pgns_json = ecu_json["pgns_of_interest"].to<JsonArray>();
             for (uint32_t pgn : ecu.pgns_of_interest) {
                 pgns_json.add(pgn);
             }

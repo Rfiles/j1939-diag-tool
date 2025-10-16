@@ -53,7 +53,7 @@ void set_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand set_command = {
+extern const CliCommand set_command = {
     "set",
     "Set a configuration value (e.g., set wifi_ssid MyNetwork)",
     set_execute

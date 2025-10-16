@@ -49,7 +49,7 @@ void read_ecu_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand read_ecu_command = {
+extern const CliCommand read_ecu_command = {
     "read_ecu",
     "Request all interesting PGNs from a specific ECU of the active model",
     read_ecu_execute

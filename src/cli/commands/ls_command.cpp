@@ -23,7 +23,7 @@ void ls_execute(const std::vector<std::string>& args) {
 }
 
 // Command definition
-const CliCommand ls_command = {
+extern const CliCommand ls_command = {
     "ls",
     "List files in the root directory",
     ls_execute
