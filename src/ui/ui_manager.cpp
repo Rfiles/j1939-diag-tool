@@ -9,14 +9,17 @@
 #include "screens/splash_screen.h"
 #include "../driver/display/st7789_driver.h"
 
-UIManager ui_manager;
+// No longer a global instance, accessed via UIManager::getInstance()
+// UIManager ui_manager;
 
 void ui_manager_task_fn(void* pv) {
-    ui_manager.run();
+    UIManager::getInstance().run();
 }
 
 void UIManager::init() {
     st7789_init();
+    // Start the UI Manager task
+    xTaskCreate(ui_manager_task_fn, "UI Manager Task", 8192, NULL, 4, NULL);
     push_screen(std::make_shared<SplashScreen>());
 }
 
@@ -48,6 +51,7 @@ void UIManager::pop_screen() {
     }
 }
 
-void ui_manager_init() {
-    xTaskCreate(ui_manager_task_fn, "UI Manager Task", 8192, NULL, 4, NULL);
-}
+// No longer needed. Init is now handled by UIManager::getInstance().init();
+// void ui_manager_init() {
+//     xTaskCreate(ui_manager_task_fn, "UI Manager Task", 8192, NULL, 4, NULL);
+// }

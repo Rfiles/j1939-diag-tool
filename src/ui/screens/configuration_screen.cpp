@@ -6,7 +6,7 @@
 #include "../../driver/button_driver/button_driver.h"
 #include <Arduino.h>
 
-extern UIManager ui_manager;
+
 
 // Map brightness level (0-9) to PWM value (5% to 100% of 255)
 uint8_t level_to_pwm(int level) {
@@ -50,10 +50,9 @@ void ConfigurationScreen::handle_input() {
         if (event == BTN_PRESS_SELECT) {
             if (selected == 1) { // Guardar
                 // The config is already updated, just save it
-                settings_save();
-                ui_manager.pop_screen();
+                UIManager::getInstance().pop_screen();
             } else if (selected == 2) { // Sair
-                ui_manager.pop_screen();
+                UIManager::getInstance().pop_screen();
             }
         } else if (event == BTN_PRESS_NEXT) {
              if (selected == 0) { // Brilho

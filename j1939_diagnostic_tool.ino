@@ -54,7 +54,7 @@ void setup() {
     shared_resources_init();
 
     // Initialize the UI as early as possible to show the splash screen
-    ui_manager_init();
+    UIManager::getInstance().init();
 
     // Initialize J1939 definitions
     init_spn_to_pgn_map();
@@ -66,7 +66,7 @@ void setup() {
         // Attempt to format and create a default filesystem
         if (filesystem_format_and_create_defaults()) {
             // Show a message to the user and wait for confirmation
-            ui_manager.push_screen(std::make_shared<ErrorScreen>("FS Error", "FS created. Press SELECT"));
+            UIManager::getInstance().push_screen(std::make_shared<ErrorScreen>("FS Error", "FS created. Press SELECT"));
             // The UI task will handle the rest. We just need to wait here.
             // The ErrorScreen will pop itself when the user presses SELECT.
         } else {

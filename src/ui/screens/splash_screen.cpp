@@ -6,7 +6,7 @@
 #include "main_menu.h"
 #include <Arduino.h>
 
-extern UIManager ui_manager;
+
 
 void SplashScreen::on_enter() {
     st7789_fill_screen(COLOR_BLACK);
@@ -22,7 +22,7 @@ void SplashScreen::on_exit() {
 
 void SplashScreen::handle_input() {
     if (millis() - enter_time > 3000) {
-        ui_manager.push_screen(std::make_shared<MainMenuScreen>());
+        UIManager::getInstance().push_screen(std::make_shared<MainMenuScreen>());
     }
 }
 

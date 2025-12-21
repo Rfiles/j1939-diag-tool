@@ -7,7 +7,7 @@
 #include "configuration_screen.h"
 #include "shutdown_screen.h"
 
-extern UIManager ui_manager;
+
 
 MainMenuScreen::MainMenuScreen() : menu({"VIATURA", "CONFIGURACOES", "DESLIGAR"}) {}
 
@@ -27,11 +27,11 @@ void MainMenuScreen::handle_input() {
         if (event == BTN_PRESS_SELECT) {
             int selected = menu.get_selected_item();
             if (selected == 0) {
-                ui_manager.push_screen(std::make_shared<VehicleSelectionScreen>());
+                UIManager::getInstance().push_screen(std::make_shared<VehicleSelectionScreen>());
             } else if (selected == 1) {
-                ui_manager.push_screen(std::make_shared<ConfigurationScreen>());
+                UIManager::getInstance().push_screen(std::make_shared<ConfigurationScreen>());
             } else if (selected == 2) {
-                ui_manager.push_screen(std::make_shared<ShutdownScreen>());
+                UIManager::getInstance().push_screen(std::make_shared<ShutdownScreen>());
             }
         }
     }

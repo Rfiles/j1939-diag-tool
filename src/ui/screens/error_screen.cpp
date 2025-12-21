@@ -5,7 +5,7 @@
 #include "../../driver/button_driver/button_driver.h"
 #include <Arduino.h>
 
-extern UIManager ui_manager;
+
 
 ErrorScreen::ErrorScreen(const std::string& title, const std::string& message)
     : title(title), message(message) {}
@@ -15,7 +15,7 @@ void ErrorScreen::handle_input() {
     if (xQueueReceive(button_event_queue, &event, pdMS_TO_TICKS(10)) == pdPASS) {
         if (event == BTN_PRESS_SELECT) {
             // This will just pop the screen, allowing the app to continue.
-            ui_manager.pop_screen();
+            UIManager::getInstance().pop_screen();
         }
     }
 }

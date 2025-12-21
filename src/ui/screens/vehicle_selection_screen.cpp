@@ -5,7 +5,7 @@
 #include "../../driver/display/st7789_driver.h"
 #include "../../core/error_handler.h"
 
-extern UIManager ui_manager;
+
 
 VehicleSelectionScreen::VehicleSelectionScreen() : menu({}) {
     const auto& models = vehicle_db_get_all_models();

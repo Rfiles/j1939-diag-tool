@@ -11,7 +11,7 @@
 #include "../../core/spn_db_handler.h"
 #include "../../core/fmi_db_handler.h"
 
-extern UIManager ui_manager;
+
 QueueHandle_t dtc_queue;
 
 DtcScreen::DtcScreen() {
@@ -29,7 +29,7 @@ void DtcScreen::handle_input() {
     button_event_t event;
     if (xQueueReceive(button_event_queue, &event, 0) == pdPASS) {
         if (event == BTN_PRESS_SELECT) {
-            ui_manager.pop_screen();
+            UIManager::getInstance().pop_screen();
         }
     }
 

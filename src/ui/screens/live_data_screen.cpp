@@ -10,7 +10,7 @@
 #include "../../driver/display/st7789_driver.h"
 #include "../../driver/button_driver/button_driver.h"
 
-extern UIManager ui_manager;
+
 
 LiveDataScreen::LiveDataScreen(const VehicleEcu* ecu) : ecu(ecu) {}
 
@@ -31,7 +31,7 @@ void LiveDataScreen::handle_input() {
     button_event_t event;
     if (xQueueReceive(button_event_queue, &event, 0) == pdPASS) {
         if (event == BTN_PRESS_SELECT) {
-            ui_manager.pop_screen();
+            UIManager::getInstance().pop_screen();
         }
     }
 }
@@ -42,5 +42,5 @@ void LiveDataScreen::draw() {
 }
 
 void ui_show_ecu_data(const VehicleEcu* ecu) {
-    ui_manager.push_screen(std::make_shared<LiveDataScreen>(ecu));
+    UIManager::getInstance().push_screen(std::make_shared<LiveDataScreen>(ecu));
 }
