@@ -33,7 +33,18 @@ bool fmi_db_init() {
     JsonObject descriptions = doc["fmi_descriptions"].as<JsonObject>();
     for (JsonPair pair : descriptions) {
         uint8_t fmi = atoi(pair.key().c_str());
-        fmi_database[fmi] = pair.value().as<String>();
+        if (pair.value().is<JsonObject>()) {
+            JsonObject obj = pair.value().as<JsonObject>();
+            if (obj.containsKey("pt")) {
+                fmi_database[fmi] = obj["pt"].as<String>();
+            } else if (obj.containsKey("en")) {
+                fmi_database[fmi] = obj["en"].as<String>();
+            } else {
+                fmi_database[fmi] = pair.value().as<String>();
+            }
+        } else {
+            fmi_database[fmi] = pair.value().as<String>();
+        }
     }
 
     error_report(ErrorLevel::INFO, "FMI_DB", "FMI description database loaded.");
