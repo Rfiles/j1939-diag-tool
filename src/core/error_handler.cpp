@@ -9,7 +9,7 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include "../comms/comms_handler.h"
-#include "../comms/gps/gps_handler.h"
+#include "../driver/gps/gps_handler.h"
 #include "../cli/cli_output.h"
 
 const char* error_level_to_string(ErrorLevel level) {

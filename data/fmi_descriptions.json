@@ -1,25 +1,132 @@
 {
   "fmi_descriptions": {
-    "0": "Data Valid But Above Normal Operating Range - Most Severe Level",
-    "1": "Data Valid But Below Normal Operating Range - Most Severe Level",
-    "2": "Data Erratic, Intermittent Or Incorrect",
-    "3": "Voltage Above Normal, Or Shorted To High Source",
-    "4": "Voltage Below Normal, Or Shorted To Low Source",
-    "5": "Current Below Normal Or Open Circuit",
-    "6": "Current Above Normal Or Grounded Circuit",
-    "7": "Mechanical System Not Responding Or Out Of Adjustment",
-    "8": "Abnormal Frequency Or Pulse Width Or Period",
-    "9": "Abnormal Update Rate",
-    "10": "Abnormal Rate Of Change",
-    "11": "Root Cause Not Known",
-    "12": "Bad Intelligent Device Or Component",
-    "13": "Out Of Calibration",
-    "14": "Special Instructions",
-    "15": "Data Valid But Above Normal Operating Range - Least Severe Level",
-    "16": "Data Valid But Above Normal Operating Range - Moderately Severe Level",
-    "17": "Data Valid But Below Normal Operating Range - Least Severe Level",
-    "18": "Data Valid But Below Normal Operating Range - Moderately Severe Level",
-    "19": "Received Network Data In Error",
-    "31": "Condition Exists"
+    "0": {
+      "en": "Data Valid But Above Normal Operating Range - Most Severe Level",
+      "pt": "Dados válidos mas acima da faixa de operação normal - Nível mais severo"
+    },
+    "1": {
+      "en": "Data Valid But Below Normal Operating Range - Most Severe Level",
+      "pt": "Dados válidos mas abaixo da faixa de operação normal - Nível mais severo"
+    },
+    "2": {
+      "en": "Data Erratic, Intermittent Or Incorrect",
+      "pt": "Dados erráticos, intermitentes ou incorretos"
+    },
+    "3": {
+      "en": "Voltage Above Normal, Or Shorted To High Source",
+      "pt": "Tensão acima do normal ou em curto com fonte de alta tensão"
+    },
+    "4": {
+      "en": "Voltage Below Normal, Or Shorted To Low Source",
+      "pt": "Tensão abaixo do normal ou em curto com fonte de baixa tensão"
+    },
+    "5": {
+      "en": "Current Below Normal Or Open Circuit",
+      "pt": "Corrente abaixo do normal ou circuito aberto"
+    },
+    "6": {
+      "en": "Current Above Normal Or Grounded Circuit",
+      "pt": "Corrente acima do normal ou circuito com ligação à massa"
+    },
+    "7": {
+      "en": "Mechanical System Not Responding Or Out Of Adjustment",
+      "pt": "Sistema mecânico não responde ou está desajustado"
+    },
+    "8": {
+      "en": "Abnormal Frequency Or Pulse Width Or Period",
+      "pt": "Frequência, largura de pulso ou período anormais"
+    },
+    "9": {
+      "en": "Abnormal Update Rate",
+      "pt": "Taxa de atualização anormal"
+    },
+    "10": {
+      "en": "Abnormal Rate Of Change",
+      "pt": "Taxa de alteração anormal"
+    },
+    "11": {
+      "en": "Root Cause Not Known",
+      "pt": "Causa raiz desconhecida"
+    },
+    "12": {
+      "en": "Bad Intelligent Device Or Component",
+      "pt": "Dispositivo ou componente inteligente defeituoso"
+    },
+    "13": {
+      "en": "Out Of Calibration",
+      "pt": "Fora de calibração"
+    },
+    "14": {
+      "en": "Special Instructions",
+      "pt": "Instruções especiais"
+    },
+    "15": {
+      "en": "Data Valid But Above Normal Operating Range - Least Severe Level",
+      "pt": "Dados válidos mas acima da faixa de operação normal - Nível menos severo"
+    },
+    "16": {
+      "en": "Data Valid But Above Normal Operating Range - Moderately Severe Level",
+      "pt": "Dados válidos mas acima da faixa de operação normal - Nível moderadamente severo"
+    },
+    "17": {
+      "en": "Data Valid But Below Normal Operating Range - Least Severe Level",
+      "pt": "Dados válidos mas abaixo da faixa de operação normal - Nível menos severo"
+    },
+    "18": {
+      "en": "Data Valid But Below Normal Operating Range - Moderately Severe Level",
+      "pt": "Dados válidos mas abaixo da faixa de operação normal - Nível moderadamente severo"
+    },
+    "19": {
+      "en": "Received Network Data In Error",
+      "pt": "Dados de rede recebidos com erro"
+    },
+    "20": {
+      "en": "Data Drifted High",
+      "pt": "Dados com desvio para valores altos"
+    },
+    "21": {
+      "en": "Data Drifted Low",
+      "pt": "Dados com desvio para valores baixos"
+    },
+    "22": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "23": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "24": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "25": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "26": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "27": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "28": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "29": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "30": {
+      "en": "Reserved for SAE Assignment",
+      "pt": "Reservado para atribuição SAE"
+    },
+    "31": {
+      "en": "Condition Exists",
+      "pt": "Condição existente"
+    }
   }
 }

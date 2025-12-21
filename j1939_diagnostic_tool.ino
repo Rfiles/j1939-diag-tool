@@ -9,7 +9,7 @@
 #include "src/j1939/j1939_handler.h"
 #include "src/ui/ui_manager.h"
 #include "src/cli/cli_handler.h"
-#include "src/comms/gps/gps_handler.h"
+#include "src/driver/gps/gps_handler.h"
 #include "src/comms/comms_handler.h"
 #include "src/core/error_handler.h"
 #include "src/core/settings_handler.h"

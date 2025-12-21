@@ -7,7 +7,7 @@
 #include <sys/time.h>
 #include "time_handler.h"
 #include "error_handler.h"
-#include "../comms/gps/gps_handler.h"
+#include "../driver/gps/gps_handler.h"
 
 // NTP server settings
 const char* NTP_SERVER = "pool.ntp.org";
