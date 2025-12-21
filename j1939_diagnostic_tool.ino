@@ -6,7 +6,7 @@
 
 #include "src/core/config.h"
 #include "src/core/filesystem_handler.h"
-#include "src/j1939/j1939_handler.h"
+#include "src/j1939/j1939_service.h"
 #include "src/ui/ui_manager.h"
 #include "src/cli/cli_handler.h"
 #include "src/driver/gps/gps_handler.h"
@@ -15,8 +15,6 @@
 #include "src/core/settings_handler.h"
 #include "src/core/license_handler.h"
 #include "src/core/time_handler.h"
-#include "src/j1939/tp_handler.h"
-#include "src/j1939/pdu_processor.h"
 #include "src/core/vehicle_db_handler.h"
 #include "src/core/spn_db_handler.h"
 #include "src/core/fmi_db_handler.h"
@@ -106,8 +104,7 @@ void setup() {
     time_handler_init(config.features.wifi_enabled ? TIME_SOURCE_NTP : TIME_SOURCE_GPS);
 
     // Initialize J1939 protocol handlers
-    tp_handler_init();
-    pdu_processor_init();
+    J1939Service::getInstance().init();
 
     // Initialize handlers based on feature flags
     if (config.features.wifi_enabled) {
@@ -126,7 +123,6 @@ void setup() {
     time_sync();
 
     // Initialize the core handlers
-    j1939_handler_init();
     cli_handler_init();
 
     error_report(ErrorLevel::INFO, "Main", "All tasks created. Scheduler is running.");
