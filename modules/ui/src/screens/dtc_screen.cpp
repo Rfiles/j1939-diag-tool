@@ -1,26 +1,26 @@
 /**
  * J1939 Diagnostic Tool - DTC Screen
  * 
- * Versão: 3.8.0
+ * Versão: 4.3.0
  */
 
 #include "dtc_screen.h"
-#include "../../driver/button_driver/button_driver.h"
+#include "../../ui/driver/button_driver/button_driver.h"
 #include "../ui_manager.h"
-#include "../../driver/display/st7789_driver.h"
-#include "../../core/spn_db_handler.h"
-#include "../../core/fmi_db_handler.h"
+#include "../../ui/driver/display/st7789_driver.h"
+#include "../../j1939/src/spn_db_handler.h"
+#include "../../j1939/src/fmi_db_handler.h"
 
 
 QueueHandle_t dtc_queue;
 
 DtcScreen::DtcScreen() {
     dtc_queue = xQueueCreate(10, sizeof(DTC));
+    title_bar.set_title("DTC CODES");
 }
 
 void DtcScreen::on_enter() {
     st7789_fill_screen(COLOR_BLACK);
-    st7789_draw_text("DTC CODES", 120, 20, COLOR_WHITE, COLOR_BLACK);
 }
 
 void DtcScreen::on_exit() {}

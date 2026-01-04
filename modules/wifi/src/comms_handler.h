@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - Comms Handler Task Interface
+ * @file comms_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Comms Handler Task Interface
  * 
- * Versão: 2.7.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef COMMS_HANDLER_H
@@ -10,7 +16,9 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/queue.h>
 
-// Enum for the state of the Communications Handler state machine
+/**
+ * @brief Enum for the state of the Communications Handler state machine.
+ */
 enum CommsState {
     COMMS_STATE_STARTING,
     COMMS_STATE_WIFI_CONNECTING,
@@ -19,7 +27,9 @@ enum CommsState {
     COMMS_STATE_WIFI_DISCONNECTED
 };
 
-// Enum for the detailed WiFi status
+/**
+ * @brief Enum for the detailed WiFi status.
+ */
 enum WiFiStatus {
     WIFI_STATUS_DISCONNECTED,
     WIFI_STATUS_CONNECTING,
@@ -27,11 +37,14 @@ enum WiFiStatus {
     WIFI_STATUS_INTERNET
 };
 
-// --- RTOS Queue ---
-// Queue for high-priority telemetry messages (payloads are heap-allocated strings)
+/**
+ * @brief Queue for high-priority telemetry messages (payloads are heap-allocated strings).
+ */
 extern QueueHandle_t telemetry_queue;
 
-// Initializes the Communications handler and creates the task
+/**
+ * @brief Initializes the Communications handler and creates the task.
+ */
 void comms_handler_init();
 
 /**

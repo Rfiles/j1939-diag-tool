@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - CLI Output Stream Manager Interface
+ * @file cli_output.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - CLI Output Stream Manager Interface
  * 
- * Versão: 3.12.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef CLI_OUTPUT_H
@@ -11,6 +17,9 @@
 
 /**
  * @brief Sets the current output stream for all CLI commands.
+ * 
+ * This allows the output of the CLI to be redirected to different streams,
+ * such as the Serial port or a Telnet client.
  * 
  * @param stream A pointer to the stream to use for output (e.g., &Serial, &wifiClient).
  */

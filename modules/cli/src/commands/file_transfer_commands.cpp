@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - File Transfer Commands
  * 
- * Versão: 3.8.0
+ * Versão: 4.3.0
  */
 
 #include "../cli_command.h"
@@ -10,6 +10,32 @@
 #include <Arduino.h>
 #include <LittleFS.h>
 #include <mbedtls/base64.h>
+
+// --- ls ---
+void ls_execute(const std::vector<std::string>& args) {
+    File root = LittleFS.open("/");
+    if (!root) {
+        cli_printf("ERROR: Could not open root directory\n");
+        return;
+    }
+    if (!root.isDirectory()) {
+        cli_printf("ERROR: Not a directory\n");
+        return;
+    }
+
+    File file = root.openNextFile();
+    while (file) {
+        cli_printf("FILE: %s, SIZE: %d\n", file.name(), file.size());
+        file = root.openNextFile();
+    }
+}
+
+extern const CliCommand ls_command = {
+    "ls",
+    "List files in the root directory",
+    ls_execute
+};
+
 
 // --- download ---
 void download_execute(const std::vector<std::string>& args) {
@@ -24,11 +50,10 @@ void download_execute(const std::vector<std::string>& args) {
         return;
     }
 
-    size_t file_size = file.size();
-    cli_printf("FILE_BEGIN %d\n", file_size);
+    cli_printf("DOWNLOAD_START\n");
 
-    unsigned char buffer[128];
-    unsigned char base64_buffer[256];
+    unsigned char buffer[64];
+    unsigned char base64_buffer[128];
     size_t bytes_read = 0;
     size_t output_len;
 
@@ -36,10 +61,11 @@ void download_execute(const std::vector<std::string>& args) {
     while ((bytes_read = file.read(buffer, sizeof(buffer))) > 0) {
         mbedtls_base64_encode(base64_buffer, sizeof(base64_buffer), &output_len, buffer, bytes_read);
         out->write(base64_buffer, output_len);
+        out->write('\n');
     }
 
     file.close();
-    cli_printf("\nFILE_END\n");
+    cli_printf("DOWNLOAD_END\n");
 }
 
 extern const CliCommand download_command = {

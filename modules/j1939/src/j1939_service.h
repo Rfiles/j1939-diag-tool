@@ -1,7 +1,15 @@
 /**
- * J1939 Diagnostic Tool - J1939 Service Interface
+ * @file j1939_service.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - J1939 Service Interface
  * 
  * This service acts as a central coordinator for the J1939 protocol stack.
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef J1939_SERVICE_H

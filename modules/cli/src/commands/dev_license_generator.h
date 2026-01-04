@@ -1,3 +1,15 @@
+/**
+ * @file dev_license_generator.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Developer License Generator
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef DEV_LICENSE_GENERATOR_H
 #define DEV_LICENSE_GENERATOR_H
 

@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - GPS Handler Task Interface
+ * @file gps_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - GPS Handler Task Interface
  * 
- * Versão: 2.7.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef GPS_HANDLER_H
@@ -9,14 +15,18 @@
 
 #include <Arduino.h>
 
-// Enum to represent GPS fix status
+/**
+ * @brief Enum to represent GPS fix status.
+ */
 enum GpsFixStatus {
     GPS_FIX_NONE,
     GPS_FIX_2D,
     GPS_FIX_3D
 };
 
-// Struct to hold parsed GPS data
+/**
+ * @brief Struct to hold parsed GPS data.
+ */
 struct GpsData {
     float latitude = 0.0;
     float longitude = 0.0;
@@ -32,13 +42,14 @@ struct GpsData {
     int satellites = 0;
 };
 
-// --- RTOS Queue ---
-// Queue for the GPS task to send parsed data to other tasks
+/**
+ * @brief Queue for the GPS task to send parsed data to other tasks.
+ */
 extern QueueHandle_t gps_data_queue;
 
-// --- Public API ---
-
-// Initializes the GPS handler and creates the task
+/**
+ * @brief Initializes the GPS handler and creates the task.
+ */
 void gps_handler_init();
 
 /**

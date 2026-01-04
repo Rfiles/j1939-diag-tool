@@ -1,7 +1,8 @@
 #include "../cli_command.h"
 #include "../cli_output.h"
-#include "../../core/config.h"
+#include "../../settings/src/config.h"
 #include "../../core/shared_resources.h"
+#include <ArduinoJson.h>
 
 // Execute function for the 'get_config' command
 void get_config_execute(const std::vector<std::string>& args) {
@@ -10,16 +11,21 @@ void get_config_execute(const std::vector<std::string>& args) {
         return;
     }
 
-    cli_printf("--- Current Configuration ---\n");
-    cli_printf("wifi_ssid=%s\n", config.wifi.ssid.c_str());
-    cli_printf("mqtt_broker=%s\n", config.mqtt.broker.c_str());
-    cli_printf("mqtt_port=%d\n", config.mqtt.port);
-    cli_printf("mqtt_topic=%s\n", config.mqtt.topic.c_str());
-    cli_printf("ota_host=%s\n", config.ota.hostname.c_str());
-    cli_printf("f_wifi=%s\n", config.features.wifi_enabled ? "true" : "false");
-    cli_printf("f_mqtt=%s\n", config.features.mqtt_enabled ? "true" : "false");
-    cli_printf("f_gps=%s\n", config.features.gps_enabled ? "true" : "false");
-    cli_printf("-----------------------------\n");
+    JsonDocument doc;
+    doc["wifi.ssid"] = config.wifi.ssid;
+    doc["wifi.password"] = config.wifi.password;
+    doc["mqtt.broker"] = config.mqtt.broker;
+    doc["mqtt.port"] = config.mqtt.port;
+    doc["mqtt.topic"] = config.mqtt.topic;
+    doc["ota.hostname"] = config.ota.hostname;
+    doc["ota.password"] = config.ota.password;
+    doc["features.wifi_enabled"] = config.features.wifi_enabled;
+    doc["features.mqtt_enabled"] = config.features.mqtt_enabled;
+    doc["features.gps_enabled"] = config.features.gps_enabled;
+
+    String output;
+    serializeJson(doc, output);
+    cli_printf("%s\n", output.c_str());
 
     xSemaphoreGive(config_mutex);
 }
@@ -27,7 +33,6 @@ void get_config_execute(const std::vector<std::string>& args) {
 // Command definition
 extern const CliCommand get_config_command = {
     "get_config",
-    "Print the current device configuration",
+    "Print the current device configuration in JSON format",
     get_config_execute
 };
-

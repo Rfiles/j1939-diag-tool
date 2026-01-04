@@ -1,19 +1,27 @@
 /**
- * J1939 Diagnostic Tool - Transport Protocol Handler Interface
+ * @file tp_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Transport Protocol Handler Interface
  * 
- * Versão: 3.0.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef TP_HANDLER_H
 #define TP_HANDLER_H
 
-#include "../driver/mcp2515_driver.h" // For can_frame
+#include "../../can/src/mcp2515_driver.h" // For can_frame
 #include <Arduino.h>
 
 #define MAX_TP_MESSAGE_SIZE 1785 // Max size for a J1939 TP message
 #define MAX_TP_SESSIONS 5      // Max concurrent TP sessions
 
-// Represents a fully reassembled multi-packet message
+/**
+ * @brief Represents a fully reassembled multi-packet message.
+ */
 struct ReassembledPDU {
     uint32_t pgn;                  // PGN of the message
     uint8_t src_addr;              // Source address
@@ -21,11 +29,14 @@ struct ReassembledPDU {
     uint16_t data_length;
 };
 
-// --- RTOS Queue ---
-// Queue for the TP handler to send fully reassembled PDUs to the application layer
+/**
+ * @brief Queue for the TP handler to send fully reassembled PDUs to the application layer.
+ */
 extern QueueHandle_t j1939_complete_pdu_queue;
 
-// Struct for an outgoing multi-packet message request
+/**
+ * @brief Struct for an outgoing multi-packet message request.
+ */
 struct OutgoingTPMessage {
     uint32_t pgn;
     uint8_t dest_addr;
@@ -33,7 +44,9 @@ struct OutgoingTPMessage {
     uint16_t data_length;
 };
 
-// Queue for sending multi-packet messages
+/**
+ * @brief Queue for sending multi-packet messages.
+ */
 extern QueueHandle_t j1939_tx_tp_queue;
 
 /**

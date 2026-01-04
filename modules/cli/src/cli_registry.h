@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - CLI Command Registry Interface
+ * @file cli_registry.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - CLI Command Registry Interface
  * 
- * Versão: 2.9.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef CLI_REGISTRY_H

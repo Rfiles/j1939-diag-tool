@@ -1,19 +1,36 @@
 /**
- * J1939 Diagnostic Tool - Filesystem Handler Interface
+ * @file filesystem_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Filesystem Handler Interface
  * 
- * Versão: 2.1.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef FILESYSTEM_HANDLER_H
 #define FILESYSTEM_HANDLER_H
 
-// Initializes LittleFS and loads the configuration from config.json
-// Returns true on success, false on failure.
+/**
+ * @brief Initializes LittleFS.
+ * 
+ * This function initializes the LittleFS filesystem.
+ * 
+ * @return true if initialization is successful, false otherwise.
+ */
 bool filesystem_init();
 
 
-// Formats the filesystem and creates default files.
-// Returns true on success, false on failure.
+/**
+ * @brief Formats the filesystem and creates default files.
+ * 
+ * This function formats the LittleFS filesystem and creates the default
+ * configuration files.
+ * 
+ * @return true if the format and creation is successful, false otherwise.
+ */
 bool filesystem_format_and_create_defaults();
 
 #endif // FILESYSTEM_HANDLER_H

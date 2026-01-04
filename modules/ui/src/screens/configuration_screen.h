@@ -1,3 +1,15 @@
+/**
+ * @file configuration_screen.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Configuration Screen
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef CONFIGURATION_SCREEN_H
 #define CONFIGURATION_SCREEN_H
 

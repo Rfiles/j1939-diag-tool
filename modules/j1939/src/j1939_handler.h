@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - J1939 Handler Task Interface
+ * @file j1939_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - J1939 Handler Task Interface
  * 
- * Versão: 2.1.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef J1939_HANDLER_H
@@ -9,9 +15,11 @@
 
 #include <Arduino.h>
 #include "j1939_pgn.h"
-#include "../driver/mcp2515_driver.h"
+#include "../../can/src/mcp2515_driver.h"
 
-// Enum for the state of the J1939 Address Claiming process
+/**
+ * @brief Enum for the state of the J1939 Address Claiming process.
+ */
 enum J1939_ADDRESS_CLAIM_STATE {
     AC_STATE_UNCLAIMED,
     AC_STATE_CLAIMING,
@@ -19,21 +27,35 @@ enum J1939_ADDRESS_CLAIM_STATE {
     AC_STATE_CANNOT_CLAIM
 };
 
-// Struct for a J1939 transmit request
+/**
+ * @brief Struct for a J1939 transmit request.
+ */
 struct J1939TxRequest {
     uint32_t pgn;
     uint8_t dest_address;
 };
 
-// --- RTOS Queues ---
+/**
+ * @brief Queue for J1939 transmit requests.
+ */
 extern QueueHandle_t j1939_tx_queue;
+
+/**
+ * @brief Queue for received J1939 messages.
+ */
 extern QueueHandle_t j1939_rx_queue;
 
-// --- Public API ---
-
-// Initializes the J1939 handler and creates the task
+/**
+ * @brief Initializes the J1939 handler and creates the task.
+ */
 void j1939_handler_init();
 
+/**
+ * @brief Requests a PGN from a specific destination address.
+ * 
+ * @param pgn The PGN to request.
+ * @param dest_address The destination address.
+ */
 void j1939_request_pgn(uint32_t pgn, uint8_t dest_address);
 
 

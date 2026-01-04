@@ -1,12 +1,10 @@
 #include "configuration_screen.h"
 #include "../ui_manager.h"
-#include "../../core/config.h"
-#include "../../core/settings_handler.h"
-#include "../../driver/display/st7789_driver.h"
-#include "../../driver/button_driver/button_driver.h"
+#include "../../settings/src/config.h"
+#include "../../settings/src/settings_handler.h"
+#include "../../ui/driver/display/st7789_driver.h"
+#include "../../ui/driver/button_driver/button_driver.h"
 #include <Arduino.h>
-
-
 
 // Map brightness level (0-9) to PWM value (5% to 100% of 255)
 uint8_t level_to_pwm(int level) {
@@ -22,12 +20,11 @@ int pwm_to_level(uint8_t pwm) {
 
 ConfigurationScreen::ConfigurationScreen() 
     : menu({"Brilho", "Guardar", "Sair"}) {
+    title_bar.set_title("CONFIGURACOES");
 }
 
 void ConfigurationScreen::on_enter() {
     st7789_fill_screen(COLOR_BLACK);
-    st7789_draw_text("CONFIGURACOES", 120, 20, COLOR_WHITE, COLOR_BLACK);
-    st7789_draw_text("--------------------", 120, 40, COLOR_WHITE, COLOR_BLACK);
 
     // Initialize brightness level from current config
     brightness_level = pwm_to_level(config.display.display_brightness);
@@ -49,7 +46,7 @@ void ConfigurationScreen::handle_input() {
 
         if (event == BTN_PRESS_SELECT) {
             if (selected == 1) { // Guardar
-                // The config is already updated, just save it
+                settings_save();
                 UIManager::getInstance().pop_screen();
             } else if (selected == 2) { // Sair
                 UIManager::getInstance().pop_screen();
@@ -70,6 +67,7 @@ void ConfigurationScreen::handle_input() {
 }
 
 void ConfigurationScreen::draw() {
+    title_bar.draw();
     menu.draw();
 }
 

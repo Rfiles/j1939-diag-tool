@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - Simple 5x7 Font
+ * @file simple_font.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Simple 5x7 Font
  * 
- * Versão: 2.1.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef SIMPLE_FONT_H
@@ -9,7 +15,9 @@
 
 #include <stdint.h>
 
-// Basic 5x7 font for ASCII characters 32-127
+/**
+ * @brief Basic 5x7 font for ASCII characters 32-127.
+ */
 static const uint8_t font[96][5] = {
     {0x00, 0x00, 0x00, 0x00, 0x00}, // sp
     {0x00, 0x00, 0x5F, 0x00, 0x00}, // ! 

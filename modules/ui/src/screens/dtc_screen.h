@@ -1,14 +1,20 @@
 /**
- * J1939 Diagnostic Tool - DTC Screen
+ * @file dtc_screen.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - DTC Screen
  * 
- * Versão: 3.8.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef DTC_SCREEN_H
 #define DTC_SCREEN_H
 
 #include "screen.h"
-#include "../../j1939/dm_handler.h"
+#include "../../j1939/src/dm_handler.h"
 #include <vector>
 
 extern QueueHandle_t dtc_queue;

@@ -1,3 +1,15 @@
+/**
+ * @file screen.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Screen Interface
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef SCREEN_H
 #define SCREEN_H
 

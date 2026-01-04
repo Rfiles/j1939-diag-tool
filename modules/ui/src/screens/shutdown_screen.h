@@ -1,3 +1,15 @@
+/**
+ * @file shutdown_screen.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Shutdown Screen
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef SHUTDOWN_SCREEN_H
 #define SHUTDOWN_SCREEN_H
 

@@ -7,14 +7,12 @@
 #include "configuration_screen.h"
 #include "shutdown_screen.h"
 
-
-
-MainMenuScreen::MainMenuScreen() : menu({"VIATURA", "CONFIGURACOES", "DESLIGAR"}) {}
+MainMenuScreen::MainMenuScreen() : menu({"VIATURA", "CONFIGURACOES", "DESLIGAR"}) {
+    title_bar.set_title("MENU PRINCIPAL");
+}
 
 void MainMenuScreen::on_enter() {
     st7789_fill_screen(COLOR_BLACK);
-    st7789_draw_text("MENU PRINCIPAL", 120, 20, COLOR_WHITE, COLOR_BLACK);
-    st7789_draw_text("--------------------", 120, 40, COLOR_WHITE, COLOR_BLACK);
 }
 
 void MainMenuScreen::on_exit() {

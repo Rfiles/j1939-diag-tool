@@ -1,16 +1,24 @@
 /**
- * J1939 Diagnostic Tool - SPN Parser Interface
+ * @file spn_parser.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - SPN Parser Interface
  * 
- * Versão: 3.16.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef SPN_PARSER_H
 #define SPN_PARSER_H
 
-#include "../driver/mcp2515_driver.h"
+#include "../../can/src/mcp2515_driver.h"
 #include <string>
 
-// Struct to hold a parsed SPN value and its units
+/**
+ * @brief Struct to hold a parsed SPN value and its units.
+ */
 struct ParsedSPN {
     bool is_valid = false;
     float value;

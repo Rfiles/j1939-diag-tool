@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - CLI Handler (Serial and Telnet)
  * 
- * Versão: 3.8.0
+ * Versão: 4.3.0
  */
 
 #include "cli_handler.h"
@@ -17,6 +17,7 @@
 static CliState current_cli_state = CLI_STATE_NORMAL;
 static File upload_file;
 static unsigned long upload_timer = 0;
+static std::string upload_filepath;
 
 // --- Public API ---
 
@@ -38,15 +39,15 @@ void execute_command(char* command) {
 }
 
 void cli_enter_upload_mode(const std::string& filepath) {
-    upload_file = LittleFS.open(filepath.c_str(), "w");
+    upload_filepath = filepath;
+    upload_file = LittleFS.open(upload_filepath.c_str(), "w");
     if (!upload_file) {
-        cli_printf("ERROR: Could not open file for writing.\n");
+        cli_printf("UPLOAD_ERROR\n");
         return;
     }
     current_cli_state = CLI_STATE_UPLOADING;
     upload_timer = millis();
     cli_printf("READY_FOR_UPLOAD\n");
-    cli_printf("Send Base64 encoded lines. End with a line containing only 'UPLOAD_END'.\n");
 }
 
 // --- RTOS Task for Serial ---
@@ -64,7 +65,6 @@ void cli_serial_task_fn(void* pv) {
         cli_set_output_stream(&Serial);
 
         if (current_cli_state == CLI_STATE_UPLOADING) {
-            // Handle upload logic if initiated from Serial
             if (Serial.available()) {
                 char c = Serial.read();
                 if (c == '\n' || c == '\r') {
@@ -72,14 +72,20 @@ void cli_serial_task_fn(void* pv) {
                         line_buffer[line_pos] = '\0';
                         if (strcmp(line_buffer, "UPLOAD_END") == 0) {
                             upload_file.close();
-                            cli_printf("\nSUCCESS: File upload complete.\n");
+                            cli_printf("UPLOAD_SUCCESS\n");
                             current_cli_state = CLI_STATE_NORMAL;
                         } else {
                             unsigned char decoded_buffer[256];
                             size_t decoded_len;
-                            mbedtls_base64_decode(decoded_buffer, sizeof(decoded_buffer), &decoded_len, (const unsigned char*)line_buffer, strlen(line_buffer));
-                            if (decoded_len > 0) upload_file.write(decoded_buffer, decoded_len);
-                            cli_printf(".");
+                            if (mbedtls_base64_decode(decoded_buffer, sizeof(decoded_buffer), &decoded_len, (const unsigned char*)line_buffer, strlen(line_buffer)) == 0) {
+                                upload_file.write(decoded_buffer, decoded_len);
+                            } else {
+                                // Error decoding
+                                upload_file.close();
+                                LittleFS.remove(upload_filepath.c_str());
+                                cli_printf("UPLOAD_ERROR\n");
+                                current_cli_state = CLI_STATE_NORMAL;
+                            }
                         }
                         line_pos = 0;
                     }
@@ -90,8 +96,9 @@ void cli_serial_task_fn(void* pv) {
             }
             if (millis() - upload_timer > 20000) { // 20s timeout
                 upload_file.close();
+                LittleFS.remove(upload_filepath.c_str());
                 current_cli_state = CLI_STATE_NORMAL;
-                cli_printf("\nERROR: Upload timed out.\n");
+                cli_printf("UPLOAD_ERROR\n");
             }
         } else { // CLI_STATE_NORMAL
             if (Serial.available()) {
@@ -106,7 +113,7 @@ void cli_serial_task_fn(void* pv) {
                     cli_printf("> ");
                 } else if (c == '\b' && line_pos > 0) {
                     line_pos--;
-                    Serial.print("\b \b");
+                    Serial.print("\b ");
                 } else if (isPrintable(c) && line_pos < sizeof(line_buffer) - 1) {
                     line_buffer[line_pos++] = c;
                     Serial.print(c);

@@ -1,3 +1,15 @@
+/**
+ * @file cli_commands.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Forward declarations for all CLI commands
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef CLI_COMMANDS_H
 #define CLI_COMMANDS_H
 

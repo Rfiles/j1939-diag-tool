@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - DM (Diagnostic Message) Handler Interface
+ * @file dm_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - DM (Diagnostic Message) Handler Interface
  * 
- * Versão: 3.6.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef DM_HANDLER_H
@@ -11,12 +17,14 @@
 
 #include <map>
 
-// Represents a single J1939 Diagnostic Trouble Code (DTC)
+/**
+ * @brief Represents a single J1939 Diagnostic Trouble Code (DTC).
+ */
 struct DTC {
-    uint32_t spn; // Suspect Parameter Number (19 bits)
-    uint8_t fmi;  // Failure Mode Identifier (5 bits)
-    uint8_t oc;   // Occurrence Count (7 bits)
-    uint8_t cm;   // SPN Conversion Method (1 bit)
+    uint32_t spn; /**< Suspect Parameter Number (19 bits) */
+    uint8_t fmi;  /**< Failure Mode Identifier (5 bits) */
+    uint8_t oc;   /**< Occurrence Count (7 bits) */
+    uint8_t cm;   /**< SPN Conversion Method (1 bit) */
 };
 
 /**
@@ -43,7 +51,9 @@ void dm_parse_dm2(const uint8_t* data, uint16_t length);
  */
 void dm_parse_dm24(const uint8_t* data, uint16_t length);
 
-// Represents a Freeze Frame of SPN data associated with a DTC
+/**
+ * @brief Represents a Freeze Frame of SPN data associated with a DTC.
+ */
 struct FreezeFrame {
     DTC trigger_dtc;
     std::map<uint32_t, float> spn_values;

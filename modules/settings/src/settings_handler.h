@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - NVS Settings Handler Interface
+ * @file settings_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - NVS Settings Handler Interface
  * 
- * Versão: 2.4.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef SETTINGS_HANDLER_H

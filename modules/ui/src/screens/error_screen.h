@@ -1,4 +1,15 @@
-'''
+/**
+ * @file error_screen.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Error Screen
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef ERROR_SCREEN_H
 #define ERROR_SCREEN_H
 
@@ -19,4 +30,3 @@ private:
 };
 
 #endif // ERROR_SCREEN_H
-'''

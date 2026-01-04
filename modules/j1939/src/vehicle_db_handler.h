@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - Vehicle Database Handler Interface
+ * @file vehicle_db_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Vehicle Database Handler Interface
  * 
- * Versão: 3.8.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef VEHICLE_DB_HANDLER_H
@@ -11,14 +17,18 @@
 #include <string>
 #include <vector>
 
-// Represents a single ECU in a vehicle model
+/**
+ * @brief Represents a single ECU in a vehicle model.
+ */
 struct VehicleEcu {
     String name;
     uint8_t source_address;
     std::vector<uint32_t> pgns_of_interest;
 };
 
-// Represents a single vehicle model
+/**
+ * @brief Represents a single vehicle model.
+ */
 struct VehicleModel {
     String model_name;
     String type; // "diesel" or "electric"

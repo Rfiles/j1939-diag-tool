@@ -1,8 +1,8 @@
 #include "vehicle_selection_screen.h"
-#include "../../driver/button_driver/button_driver.h"
+#include "../../ui/driver/button_driver/button_driver.h"
 #include "../ui_manager.h"
-#include "../../core/vehicle_db_handler.h"
-#include "../../driver/display/st7789_driver.h"
+#include "../../j1939/src/vehicle_db_handler.h"
+#include "../../ui/driver/display/st7789_driver.h"
 #include "../../core/error_handler.h"
 
 
@@ -14,12 +14,11 @@ VehicleSelectionScreen::VehicleSelectionScreen() : menu({}) {
         model_names.push_back(model.model_name.c_str());
     }
     menu = Menu(model_names);
+    title_bar.set_title("SELECIONAR VIATURA");
 }
 
 void VehicleSelectionScreen::on_enter() {
     st7789_fill_screen(COLOR_BLACK);
-    st7789_draw_text("SELECIONAR VIATURA", 120, 20, COLOR_WHITE, COLOR_BLACK);
-    st7789_draw_text("--------------------", 120, 40, COLOR_WHITE, COLOR_BLACK);
 }
 
 void VehicleSelectionScreen::on_exit() {

@@ -1,14 +1,25 @@
-'''
+/**
+ * @file error_screen.cpp
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Error Screen
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #include "error_screen.h"
 #include "../ui_manager.h"
-#include "../../driver/display/st7789_driver.h"
-#include "../../driver/button_driver/button_driver.h"
+#include "../../ui/driver/display/st7789_driver.h"
+#include "../../ui/driver/button_driver/button_driver.h"
 #include <Arduino.h>
 
-
-
 ErrorScreen::ErrorScreen(const std::string& title, const std::string& message)
-    : title(title), message(message) {}
+    : title(title), message(message) {
+    title_bar.set_title(title);
+}
 
 void ErrorScreen::handle_input() {
     button_event_t event;
@@ -21,13 +32,13 @@ void ErrorScreen::handle_input() {
 }
 
 void ErrorScreen::draw() {
-    st7789_draw_text(title.c_str(), 10, 20, ST7789_RED, 2);
-    st7789_draw_text(message.c_str(), 10, 50, ST7789_WHITE, 1);
-    st7789_draw_text("Press SELECT to continue", 10, 100, ST7789_GREEN, 1);
+    title_bar.draw();
+    st7789_draw_text(message.c_str(), 10, 50, COLOR_WHITE, COLOR_BLACK);
+    st7789_draw_text("Press SELECT to continue", 10, 100, COLOR_GREEN, COLOR_BLACK);
 }
 
 void ErrorScreen::on_enter() {
-    st7789_fill_screen(ST7789_BLACK);
+    st7789_fill_screen(COLOR_BLACK);
     // Clear the button event queue to avoid processing old presses
     xQueueReset(button_event_queue);
 }
@@ -35,4 +46,3 @@ void ErrorScreen::on_enter() {
 void ErrorScreen::on_exit() {
     // Nothing to do
 }
-'''

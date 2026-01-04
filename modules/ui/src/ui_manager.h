@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - UI Manager
+ * @file ui_manager.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - UI Manager
  * 
- * Versão: 3.8.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef UI_MANAGER_H
@@ -52,11 +58,5 @@ private:
     UIManager(UIManager const&) = delete;
     void operator=(UIManager const&) = delete;
 };
-
-// No longer needed as it will be accessed via UIManager::getInstance()
-// void ui_manager_init();
-
-// No longer needed as it will be accessed via UIManager::getInstance()
-// extern UIManager ui_manager;
 
 #endif // UI_MANAGER_H

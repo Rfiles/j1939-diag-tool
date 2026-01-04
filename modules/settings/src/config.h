@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - Configuration Structs and Constants
+ * @file config.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Configuration Structs and Constants
  * 
- * Versão: 2.2.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef CONFIG_H
@@ -9,9 +15,11 @@
 
 #include <Arduino.h>
 
-#define FIRMWARE_VERSION "2.8.0"
+#define FIRMWARE_VERSION "4.3.0"
 
-// Struct to hold all application configuration
+/**
+ * @brief Struct to hold all application configuration.
+ */
 struct AppConfig {
     uint8_t j1939_node_address;
     uint64_t j1939_name;
@@ -24,6 +32,9 @@ struct AppConfig {
         int port;
         String topic;
     } mqtt;
+    struct {
+        String server;
+    } ntp;
     struct {
         uint8_t select_pin;
         uint8_t next_pin;
@@ -56,8 +67,11 @@ struct AppConfig {
     } features;
 };
 
-// Declare a global instance of the configuration
-// This will be populated by the filesystem_handler on startup.
+/**
+ * @brief Global instance of the application configuration.
+ * 
+ * This will be populated by the filesystem_handler on startup.
+ */
 extern AppConfig config;
 
 #endif // CONFIG_H

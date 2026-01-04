@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - SPN Database Handler Interface
+ * @file spn_db_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - SPN Database Handler Interface
  * 
- * Versão: 3.14.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef SPN_DB_HANDLER_H

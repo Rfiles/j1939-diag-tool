@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - Advanced Licensing Handler Interface
+ * @file license_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Advanced Licensing Handler Interface
  * 
- * Versão: 2.7.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef LICENSE_HANDLER_H
@@ -9,10 +15,12 @@
 
 #include <Arduino.h>
 
-// Feature flags that can be licensed
+/**
+ * @brief Feature flags that can be licensed.
+ */
 enum class LicensedFeature : uint8_t {
-    TELEMETRY = 1 << 0, // Bit 0
-    J1939_PRO = 1 << 1, // Bit 1 (Example for a future feature)
+    TELEMETRY = 1 << 0, /**< Bit 0 */
+    J1939_PRO = 1 << 1, /**< Bit 1 (Example for a future feature) */
     // Add up to 8 features here
 };
 

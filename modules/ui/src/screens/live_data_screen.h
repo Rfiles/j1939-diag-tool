@@ -1,14 +1,20 @@
 /**
- * J1939 Diagnostic Tool - Live Data Screen
+ * @file live_data_screen.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Live Data Screen
  * 
- * Versão: 3.8.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef LIVE_DATA_SCREEN_H
 #define LIVE_DATA_SCREEN_H
 
 #include "screen.h"
-#include "../../core/vehicle_db_handler.h"
+#include "../../j1939/src/vehicle_db_handler.h"
 
 class LiveDataScreen : public Screen {
 public:

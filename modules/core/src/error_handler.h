@@ -1,12 +1,21 @@
 /**
- * J1939 Diagnostic Tool - Centralized Error Handler Interface
+ * @file error_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Centralized Error Handler Interface
  * 
- * Versão: 2.3.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef ERROR_HANDLER_H
 #define ERROR_HANDLER_H
 
+/**
+ * @brief Enum for the severity level of an error or event.
+ */
 enum class ErrorLevel {
     INFO,
     WARN,

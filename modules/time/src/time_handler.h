@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - Time Handler Interface
+ * @file time_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - Time Handler Interface
  * 
- * Versão: 2.5.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef TIME_HANDLER_H
@@ -9,7 +15,9 @@
 
 #include <Arduino.h>
 
-// Enum to define the source for time synchronization
+/**
+ * @brief Enum to define the source for time synchronization.
+ */
 enum TimeSource {
     TIME_SOURCE_NTP,
     TIME_SOURCE_GPS

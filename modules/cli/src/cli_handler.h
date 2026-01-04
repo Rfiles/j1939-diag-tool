@@ -1,7 +1,13 @@
 /**
- * J1939 Diagnostic Tool - CLI Handler Task Interface
+ * @file cli_handler.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - CLI Handler Task Interface
  * 
- * Versão: 3.8.0
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
  */
 
 #ifndef CLI_HANDLER_H
@@ -9,13 +15,20 @@
 
 #include <string>
 
-// Enum for the state of the CLI handler
+/**
+ * @brief Enum for the state of the CLI handler.
+ */
 enum CliState {
-    CLI_STATE_NORMAL,
-    CLI_STATE_UPLOADING
+    CLI_STATE_NORMAL,    /**< Normal operation, waiting for commands */
+    CLI_STATE_UPLOADING  /**< Waiting for file content to be uploaded */
 };
 
-// Initializes and creates the CLI handler task
+/**
+ * @brief Initializes and creates the CLI handler task.
+ * 
+ * This function initializes the CLI handler and creates a new FreeRTOS task
+ * to handle the command line interface.
+ */
 void cli_handler_init();
 
 /**

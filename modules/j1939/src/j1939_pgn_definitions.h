@@ -1,3 +1,15 @@
+/**
+ * @file j1939_pgn_definitions.h
+ * @author R. Reis
+ * @date 2023-08-01
+ * @brief J1939 Diagnostic Tool - PGN to SPN Mapping
+ * 
+ * @see https://github.com/ReisR/J1939-Diagnostic-Tool
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
+
 #ifndef J1939_PGN_DEFINITIONS_H
 #define J1939_PGN_DEFINITIONS_H
 
@@ -5,9 +17,9 @@
 #include <vector>
 #include <cstdint>
 
-// This file provides a basic database for the structure of common PGNs.
-
-// Maps a PGN to the list of SPNs it contains
+/**
+ * @brief Maps a PGN to the list of SPNs it contains.
+ */
 static std::map<uint32_t, std::vector<uint32_t>> pgn_to_spns_map = {
     {61444, {190, 92}}, // EEC1: Engine Speed, Percent Load
     {65262, {110, 175}}, // ET1: Engine Coolant Temp, Engine Oil Temp
@@ -22,10 +34,14 @@ static std::map<uint32_t, std::vector<uint32_t>> pgn_to_spns_map = {
     {65228, {}}           // DM3: Clear Previously Active DTCs
 };
 
-// Reverse map for convenience: maps an SPN to its parent PGN
+/**
+ * @brief Reverse map for convenience: maps an SPN to its parent PGN.
+ */
 static std::map<uint32_t, uint32_t> spn_to_pgn_map;
 
-// Initializes the reverse map. Should be called once on startup.
+/**
+ * @brief Initializes the reverse map. Should be called once on startup.
+ */
 static inline void init_spn_to_pgn_map() {
     if (spn_to_pgn_map.empty()) {
         for (const auto& pair : pgn_to_spns_map) {
