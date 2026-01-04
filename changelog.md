@@ -1,5 +1,29 @@
 # Histórico de Alterações do Projeto
 
+### v4.2.1 (2026-01-04)
+- **Melhoria do Processo de Deploy e Sincronização de Versão:**
+  - Corrigidos múltiplos problemas relacionados com a sincronização de versão e o processo de deploy.
+  - Implementada a funcionalidade de autenticação via token para o GitHub no script `deploy_to_github.sh`.
+  - O `deploy_config.sh` foi reintroduzido e adicionado ao `.gitignore` para a gestão segura do token.
+  - Sincronização e atualização de versões para `v4.2.1` em `j1939_diagnostic_tool.ino` e `changelog.md`.
+
+### v4.2.0 (2026-01-04)
+- **Melhoria do Processo de Deploy:**
+  - O script `deploy_to_github.sh` foi completamente refatorado para um uso mais profissional e robusto.
+  - Adicionado suporte a argumentos de linha de comando para mensagem de commit (`-m`), branch (`-b`), e criação de tags (`-t`).
+  - O script agora deteta automaticamente o branch atual e inclui mecanismos de segurança como `set -e` e confirmação para `git push --force`.
+  - A configuração do repositório foi movida para um ficheiro `deploy_config.sh` (ignorado pelo `.gitignore`) para separar a configuração da lógica.
+- **Sincronização de Versão:**
+  - Corrigida a inconsistência de versões entre o `changelog.md` e o ficheiro principal `.ino`.
+  - A versão do projeto foi unificada e atualizada para `v4.2.0` em todos os locais relevantes.
+
+### v4.1.0 (2026-01-01)
+- **Melhoria da Ferramenta Gráfica (GUI):**
+  - Adicionado um novo separador "Configuration" à aplicação `gui_tool.py`.
+  - Este separador permite visualizar e editar as configurações do dispositivo diretamente a partir da interface gráfica.
+  - As configurações são carregadas do ficheiro local `data/config.json` para facilitar a edição.
+  - As novas configurações podem ser enviadas para o dispositivo através da porta série, utilizando os comandos `set <key> <value>`, simplificando a gestão remota do aparelho.
+
 ### v3.8.0 (2025-10-13)
 - **Remoção de Dependência Externa:**
   - Removida a dependência da biblioteca `ESP32Ping`.

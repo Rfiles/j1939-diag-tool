@@ -1,7 +1,7 @@
 /**
  * J1939 Diagnostic Tool - FreeRTOS Entry Point
  * 
- * Versão: 3.8.0
+ * Versão: 4.2.1
  */
 
 #include "src/core/config.h"
@@ -48,7 +48,7 @@
 void setup() {
     // Start serial for debugging
     Serial.begin(115200);
-    Serial.println("\n--- J1939 Diagnostic Tool v3.8.0 ---");
+    Serial.println("\n--- J1939 Diagnostic Tool v4.2.1 ---");
 
     // Initialize shared resources (mutexes)
     shared_resources_init();
